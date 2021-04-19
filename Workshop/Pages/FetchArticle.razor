@@ -24,7 +24,7 @@
 </style>
 
 <div>
-    <a class="btn btn-primary" href='/addArticle'>Add</a>
+    <a class="btn btn-primary" href='/addArticle'>Dodaj</a>
 </div>
 <br />
 
@@ -69,7 +69,7 @@ else
                         <td>@article.Title</td>
                         <td>
                             <a class="btn btn-primary" href='/editArticle/@article.ID'>Edytuj</a>  |
-                            <a class="btn btn-danger" @onclick="() => DeleteArticle(article.ID)">Wypierdol</a>
+                            <a class="btn btn-danger" @onclick="() => DeleteArticle(article.ID)">Usuń</a>
                         </td>
                     </tr>
                 }
