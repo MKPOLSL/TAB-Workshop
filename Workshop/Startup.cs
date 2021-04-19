@@ -28,7 +28,7 @@ namespace Workshop
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddDbContext<DataAccess.AppContext>(options =>
+            services.AddDbContext<DataAccess.CarContext>(options =>
                           options.UseSqlServer(
                               Configuration.GetConnectionString("DefaultConnection")));
             //Article service  
