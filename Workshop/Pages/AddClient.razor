@@ -1,0 +1,45 @@
+﻿@page "/addClient"
+@inject IClientService clientService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+<h1>
+    Dodaj Klienta
+</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">imię</label>
+                <input for="Name" class="form-control" @bind-value="@client.FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">nazwisko</label>
+                <input for="Name" class="form-control" @bind-value="@client.LastName" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">numer telefonu</label>
+                <input for="Name" class="form-control" @bind-value="@client.PhoneNumber" />
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" @onclick="() => CreateClient()">Zapisz</button>
+                <button type="button" class="btn btn-danger" @onclick="() => cancel()">Anuluj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+
+    ClientCreateDto client = new ClientCreateDto();
+
+    protected async Task CreateClient()
+    {
+        await clientService.AddClient(client);
+        navigationManager.NavigateTo("/articlelist");
+    }
+
+    void cancel()
+    {
+        navigationManager.NavigateTo("/articlelist");
+    }
+}

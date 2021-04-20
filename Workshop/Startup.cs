@@ -1,17 +1,14 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Workshop.Concrete;
 using Workshop.Contracts;
+using Workshop.DataAccess;
+using Workshop.Interfaces;
+using Workshop.Services;
 
 namespace Workshop
 {
@@ -28,11 +25,13 @@ namespace Workshop
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddDbContext<DataAccess.CarContext>(options =>
+            services.AddDbContext<CarContext>(options =>
                           options.UseSqlServer(
                               Configuration.GetConnectionString("DefaultConnection")));
-            //Article service  
+            //services  
             services.AddScoped<IArticleManager, ArticleManager>();
+            services.AddScoped<ICarService, CarService>();
+            services.AddScoped<IClientService, ClientService>();
             //Register dapper in scope  
             services.AddScoped<IDapperManager, DapperManager>();
         }
