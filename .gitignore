@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+Workshop/Properties/serviceDependencies.local.json
+Workshop/Properties/ServiceDependencies/local/mssql1.arm.json
+Workshop/Properties/serviceDependencies.json
