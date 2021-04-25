@@ -13,6 +13,6 @@ namespace Workshop.Enums
         [Display(Name = "Correction")]
         Correction = 1,
         [Display(Name = "Warranty")]
-        Warranty = 1
+        Warranty = 2
     }
 }

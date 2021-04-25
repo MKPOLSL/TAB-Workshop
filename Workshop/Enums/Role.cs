@@ -10,7 +10,9 @@ namespace Workshop.Enums
     {
         [Display(Name = "Manager")]
         Manager = 0,
+        [Display(Name = "Worker")]
+        Worker = 1,
         [Display(Name = "Administrator")]
-        Administrator = 1
+        Administrator = 2
     }
 }

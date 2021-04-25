@@ -6,11 +6,10 @@ using Workshop.Enums;
 
 namespace Workshop.Entities
 {
-    public class Request
+    public class Request : Entity
     {
-        public Guid Id { get; set; }
         public string Description { get; set; }
-        public Result Result { get; set; }
+        public string Result { get; set; }
         public Status Status { get; set; }
         public DateTime Reqistered { get; set; }
         public DateTime FinishedOrCancelled { get; set; }

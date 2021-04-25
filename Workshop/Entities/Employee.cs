@@ -6,9 +6,10 @@ using Workshop.Enums;
 
 namespace Workshop.Entities
 {
-    public class Employee
+    public class Employee : Entity
     {
-        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Role Role { get; set; }
