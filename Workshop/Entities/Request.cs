@@ -8,6 +8,7 @@ namespace Workshop.Entities
 {
     public class Request : Entity
     {
+        public Guid Id { get; set; }
         public string Description { get; set; }
         public string Result { get; set; }
         public Status Status { get; set; }

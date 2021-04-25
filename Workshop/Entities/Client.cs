@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Workshop.Entities
 {
-    public class Client : Entity
+    public class Client : HideableEntity
     {
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
