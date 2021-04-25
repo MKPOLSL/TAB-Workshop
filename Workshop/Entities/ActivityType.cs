@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Workshop.Entities
 {
-    public class ActivityType
+    public class ActivityType : HideableEntity
     {
         [Key]
         public string Code { get; set; }
