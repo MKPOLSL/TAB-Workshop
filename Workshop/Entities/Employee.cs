@@ -6,7 +6,7 @@ using Workshop.Enums;
 
 namespace Workshop.Entities
 {
-    public class Employee : Entity
+    public class Employee : HideableEntity
     {
         public Guid Id { get; set; }
         public string Username { get; set; }

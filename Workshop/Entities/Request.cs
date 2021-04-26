@@ -6,7 +6,7 @@ using Workshop.Enums;
 
 namespace Workshop.Entities
 {
-    public class Request : Entity
+    public class Request : HideableEntity
     {
         public Guid Id { get; set; }
         public string Description { get; set; }
