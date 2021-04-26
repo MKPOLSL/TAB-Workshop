@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Workshop.Entities
 {
-    public class Entity
+    public class HideableEntity
     {
-        [Key]
-        public Guid Id { get; set; }
         public bool IsHidden { get; set; }
     }
 }

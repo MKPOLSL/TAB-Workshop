@@ -4,8 +4,9 @@ using Workshop.Enums;
 
 namespace Workshop.Entities
 {
-    public class Car : Entity
+    public class Car : HideableEntity
     {
+        public Guid Id { get; set; }
         public string RegistrationNumber { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
