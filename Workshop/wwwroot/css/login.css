@@ -1,0 +1,39 @@
+.login-input input[type = "text"], .login-input input[type = "password"] {
+    background: none;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    border: 2px solid #3498DB;
+    padding: 14px 10px;
+    outline: none;
+    color: black;
+    border-radius: 24px;
+    translation: 0.25s;
+}
+
+.login-input input[type = "text"]:focus, .login-input input[type = "password"]:focus {
+    border-color: #2ECC71;
+}
+
+.login-input input[type = "submit"] {
+    background: none;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    border: 2px solid #2ECC71;
+    padding: 5px 0px;
+    outline: none;
+    color: black;
+    border-radius: 24px;
+    translation: 0.25s;
+    cursor: pointer;
+}
+
+.login-input input[type = "submit"]:hover {
+    background: #2ECC71;
+}
+
+.login-input input[type = "submit"]:focus {
+    color: white;
+    background: #2ECC71;
+}
