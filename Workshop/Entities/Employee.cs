@@ -10,6 +10,7 @@ namespace Workshop.Entities
     public class Employee : HideableEntity
     {
         public Guid Id { get; set; }
+
         [Required]
         [StringLength(10, ErrorMessage = "Username is too long.")]
         public string Username { get; set; }
