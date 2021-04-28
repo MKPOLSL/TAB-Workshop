@@ -32,6 +32,7 @@ namespace Workshop
             services.AddScoped<IArticleManager, ArticleManager>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
             //Register dapper in scope  
             services.AddScoped<IDapperManager, DapperManager>();
         }
@@ -50,6 +51,7 @@ namespace Workshop
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

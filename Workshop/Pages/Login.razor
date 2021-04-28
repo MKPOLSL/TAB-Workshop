@@ -58,18 +58,19 @@
 
 
 @code {
-    private Employee employee;
+    private UserLoginDto employee;
     public string LoginMessage { get; set; }
     public string ErrorMessage { get; set; }
     ClaimsPrincipal claimsPrincipal;
 
     protected override void OnInitialized()
     {
-        employee = new Employee();
+        employee = new UserLoginDto();
     }
 
     private void SignIn()
     {
+
         Logger.LogInformation("SIGN IN called");
 
         LoginMessage = "Ooo mamy cynk, że kliknąłeś w SIGN IN" + "\n Username: " + employee.Username + "\n Password: " + employee.Password;
