@@ -12,7 +12,7 @@
 }
 
 .login-input input[type = "text"]:focus, .login-input input[type = "password"]:focus {
-    border-color: #2ECC71;
+    border: 4px solid #2ECC71;
 }
 
 .login-input input[type = "submit"] {
