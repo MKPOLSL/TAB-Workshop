@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Workshop.Concrete;
 using Workshop.Contracts;
 using Workshop.DataAccess;
@@ -27,6 +30,7 @@ namespace Workshop
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddBlazoredLocalStorage();
+            services.AddAuthorizationCore();
 
             services.AddDbContext<CarContext>(options =>
                           options.UseSqlServer(
@@ -39,6 +43,21 @@ namespace Workshop
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  
             services.AddScoped<IDapperManager, DapperManager>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = Configuration["JwtIssuer"],
+                ValidAudience = Configuration["JwtAudience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
+            };
+        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
