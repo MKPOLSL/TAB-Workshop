@@ -12,16 +12,16 @@ namespace Workshop.Entities
     {
         public Guid Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Imię jest wymagane")]
         [Index(IsUnique = true)]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Hasło jest wymagane")]
         public string Password { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Imię jest wymagane")]
         public string FirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
         public string LastName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Rola jest wymagana")]
         public Role Role { get; set; }
 
         public virtual IEnumerable<Request> Requests { get; set; }
