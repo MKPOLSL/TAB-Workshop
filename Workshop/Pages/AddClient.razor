@@ -1,6 +1,8 @@
 ﻿@page "/addClient"
 @inject IClientService clientService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
 <h1>
     Dodaj Klienta
 </h1>

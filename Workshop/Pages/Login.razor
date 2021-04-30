@@ -64,24 +64,14 @@
     public string LoginMessage { get; set; }
     public string ErrorMessage { get; set; }
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-
     protected override Task OnInitializedAsync()
     {
         employee = new UserLoginDto();
         return base.OnInitializedAsync();
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        var state = authenticationStateTask;
-        return base.OnAfterRenderAsync(firstRender);
-    }
-
     private async Task<bool> SignIn()
     {
-        var authState = await authenticationStateTask;
         var user = await authorizationService.LoginUser(employee);
         if(user != null)
         {
