@@ -27,7 +27,7 @@ namespace Workshop.Services
             this.localStorageService = localStorageService;
         }
 
-        public async Task<bool> LoginUser(UserLoginDto employee)
+        public async Task<Employee> LoginUser(UserLoginDto employee)
         {
             var user = context.Employee
                 .Where(u => u.Username == employee.Username && u.Password == employee.Password)
@@ -36,9 +36,9 @@ namespace Workshop.Services
             if (user != null)
             {
                 await localStorageService.SetItemAsync("User", user);
-                return true;
+                return user;
             }
-            else return false;
+            else return null;
         }
     }
 }

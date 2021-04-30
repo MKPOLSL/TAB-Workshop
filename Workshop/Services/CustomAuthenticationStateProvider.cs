@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Workshop.Dtos;
+using Workshop.Entities;
 
 namespace Workshop.Services
 {
@@ -18,20 +19,35 @@ namespace Workshop.Services
             this.localStorageService = localStorageService;
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var identity = new ClaimsIdentity();
+            Employee employee = await localStorageService.GetItemAsync<Employee>("User");
+            ClaimsIdentity identity;
+
+            if(employee != null)
+            {
+                identity = new ClaimsIdentity(new[] 
+                {
+                    new Claim(ClaimTypes.Name, employee.Username),
+                    new Claim(ClaimTypes.Role, employee.Role.ToString())
+                }, "apiauth_type");
+            }
+            else
+            {
+                identity = new ClaimsIdentity();
+            }
 
             var user = new ClaimsPrincipal(identity);
-
-            return Task.FromResult(new AuthenticationState(user));
+            
+            return await Task.FromResult(new AuthenticationState(user));
         }
 
-        public void MarkUserAsAuthenticated(UserLoginDto employee)
+        public void MarkUserAsAuthenticated(Employee employee)
         {
             var identity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, employee.Username),
+                new Claim(ClaimTypes.Role, employee.Role.ToString())
             }, "apiauth_type");
 
             var user = new ClaimsPrincipal(identity);
