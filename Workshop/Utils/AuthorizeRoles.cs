@@ -11,7 +11,7 @@ namespace Workshop.Utils
     {
         public AuthorizeRoles(params Role[] roles)
         {
-            Roles = string.Join(",", Enum.GetNames(typeof(Role)));
+            Roles = string.Join(",", roles.ToList());
         }
     }
 }
