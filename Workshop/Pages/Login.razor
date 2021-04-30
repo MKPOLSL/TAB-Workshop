@@ -23,7 +23,6 @@
             <div class="col-6" style="border-left:thick">
                 <EditForm Model="@employee" OnValidSubmit="@SignIn">
                     <DataAnnotationsValidator />
-                    <ValidationSummary />
                     <div>
                         <br /><br /><br />
                     </div>
@@ -45,6 +44,7 @@
                         <span class="col-12"></span>
                         <input type="submit" class="form-control col-6 btn btn-primary" value="SIGN IN" />
                     </div>
+                    <ValidationSummary />
                     <br />
                     <div class="col-12 row" style="text-align:left; font-weight:bold; color: red">
                         <span class="col-12">@ErrorMessage</span>

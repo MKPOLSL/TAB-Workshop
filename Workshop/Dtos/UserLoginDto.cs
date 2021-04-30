@@ -8,7 +8,9 @@ namespace Workshop.Dtos
 {
     public class UserLoginDto
     {
+        [Required(ErrorMessage = "Proszę wpisać nazwę użytkownika")]
         public string Username { get; set; }
+        [Required(ErrorMessage = "Proszę wpisać hasło")]
         public string Password { get; set; }
     }
 }
