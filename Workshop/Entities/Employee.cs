@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Workshop.Enums;
@@ -11,13 +12,16 @@ namespace Workshop.Entities
     {
         public Guid Id { get; set; }
 
-        [Required]
-        [StringLength(10, ErrorMessage = "Username is too long.")]
+        [Required(ErrorMessage = "Imię jest wymagane")]
+        [Index(IsUnique = true)]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Hasło jest wymagane")]
         public string Password { get; set; }
+        [Required(ErrorMessage = "Imię jest wymagane")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
         public string LastName { get; set; }
+        [Required(ErrorMessage = "Rola jest wymagana")]
         public Role Role { get; set; }
 
         public virtual IEnumerable<Request> Requests { get; set; }

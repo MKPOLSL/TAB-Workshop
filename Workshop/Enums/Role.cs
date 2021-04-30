@@ -8,9 +8,9 @@ namespace Workshop.Enums
 {
     public enum Role
     {
-        [Display(Name = "Manager")]
+        [Display(Name = "Menadżer")]
         Manager = 0,
-        [Display(Name = "Worker")]
+        [Display(Name = "Pracownik")]
         Worker = 1,
         [Display(Name = "Administrator")]
         Administrator = 2

@@ -7,21 +7,11 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <AuthorizeView>
+        <AuthorizeView Roles="@($"{Role.Administrator}, {Role.Manager}, {Role.Worker}")">
             <Authorized>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                         <span class="oi oi-home" aria-hidden="true"></span> Strona Główna
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="articlelist">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Baza
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="addClient">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Dodaj Klienta
                     </NavLink>
                 </li>
             </Authorized>
@@ -32,6 +22,27 @@
                     </NavLink>
                 </li>
             </NotAuthorized>
+        </AuthorizeView>
+        <AuthorizeView Roles="@($"{Role.Manager}")">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="articlelist">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Baza
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="addClient">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Dodaj Klienta
+                </NavLink>
+            </li>
+        </AuthorizeView>
+        <AuthorizeView Roles="@($"{Role.Administrator}")">
+            <Authorized>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="addEmployee" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Dodaj pracownika
+                    </NavLink>
+                </li>
+            </Authorized>
         </AuthorizeView>
     </ul>
 </div>

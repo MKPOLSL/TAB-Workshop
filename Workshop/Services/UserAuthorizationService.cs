@@ -35,7 +35,11 @@ namespace Workshop.Services
 
             if (user != null)
             {
-                await localStorageService.SetItemAsync("User", user);
+                await localStorageService.SetItemAsync("User", new UserStorageDto() 
+                { 
+                    Username = user.Username,
+                    Role = user.Role
+                });
                 return user;
             }
             else return null;
