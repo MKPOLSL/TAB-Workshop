@@ -21,9 +21,9 @@ namespace Workshop.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            Employee employee = await localStorageService.GetItemAsync<Employee>("User");
-            //Employee employee = null;
-             ClaimsIdentity identity;
+            UserStorageDto employee = await localStorageService.GetItemAsync<UserStorageDto>("User");
+
+            ClaimsIdentity identity;
 
             if(employee != null)
             {
