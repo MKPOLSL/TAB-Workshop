@@ -55,5 +55,16 @@ namespace Workshop.Services
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
+
+        public void MarkUserAsLoggedOut()
+        {
+            localStorageService.RemoveItemAsync("User");
+
+            var identity = new ClaimsIdentity();
+
+            var user = new ClaimsPrincipal(identity);
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        }
     }
 }

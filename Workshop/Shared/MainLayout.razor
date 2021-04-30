@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
-
+@inject AuthenticationStateProvider authenticationStateProvider
+    
 <div class="sidebar">
     <NavMenu />
 </div>
@@ -7,9 +8,18 @@
 <div class="main">
 
     <div class="top-row px-4">
-        <NavLink class="nav-link" href="login">
-            <span class="oi oi-plus" aria-hidden="true"></span> Login
-        </NavLink>
+        <AuthorizeView>
+            <Authorized>
+                <NavLink class="nav-link" href="login" @onclick="(() => Logout())">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Logout
+                </NavLink>
+            </Authorized>
+            <NotAuthorized>
+                <NavLink class="nav-link" href="login">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Login
+                </NavLink>
+            </NotAuthorized>
+        </AuthorizeView>
         <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank">About</a>
     </div>
 
@@ -17,3 +27,10 @@
         @Body
     </div>
 </div>
+
+@code {
+    public void Logout()
+    {
+        ((CustomAuthenticationStateProvider)authenticationStateProvider).MarkUserAsLoggedOut();
+    }
+}
