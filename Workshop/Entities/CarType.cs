@@ -10,6 +10,7 @@ namespace Workshop.Entities
     {
         [Key]
         public string Code { get; set; }
+        [Required]
         public string TypeName { get; set; }
     }
 }

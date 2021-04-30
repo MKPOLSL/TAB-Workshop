@@ -16,6 +16,7 @@ namespace Workshop.Entities
         [Required]
         public CarType CarType { get; set; }
 
+        [Required]
         public virtual Client Client { get; set; }
         public virtual IEnumerable<Request> Requests { get; set; }
     }

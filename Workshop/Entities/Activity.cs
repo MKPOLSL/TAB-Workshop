@@ -17,8 +17,10 @@ namespace Workshop.Entities
         public DateTime FinishedOrCancelled { get; set; }
         [Required]
         public ActivityType ActivityType { get; set; }
-
+        
+        [Required]
         public virtual Request Request { get; set; }
+        [Required]
         public virtual Employee Worker { get; set; }
     }
 }
