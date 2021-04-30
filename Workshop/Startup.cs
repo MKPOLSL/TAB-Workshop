@@ -1,4 +1,6 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,7 @@ namespace Workshop
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddBlazoredLocalStorage();
 
             services.AddDbContext<CarContext>(options =>
                           options.UseSqlServer(
@@ -32,7 +35,8 @@ namespace Workshop
             services.AddScoped<IArticleManager, ArticleManager>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IClientService, ClientService>();
-            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IUserAuthorizationService, UserAuthorizationService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  
             services.AddScoped<IDapperManager, DapperManager>();
         }

@@ -6,7 +6,7 @@ namespace Workshop.DataAccess
     public class CarContext : DbContext
     {
         public DbSet<Car> Cars { get; set; }
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Employee> Employee { get; set; }
 
         public CarContext(DbContextOptions<CarContext> options) : base(options) { }
     }

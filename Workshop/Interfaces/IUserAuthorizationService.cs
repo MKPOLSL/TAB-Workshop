@@ -7,8 +7,8 @@ using Workshop.Dtos;
 
 namespace Workshop.Interfaces
 {
-    interface IAuthorizationService
+    interface IUserAuthorizationService
     {
-
+        Task<bool> LoginUser(UserLoginDto employee);
     }
 }

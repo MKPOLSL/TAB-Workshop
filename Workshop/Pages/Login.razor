@@ -7,7 +7,9 @@
 @using Microsoft.Extensions.Logging
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IUserAuthorizationService authorizationService
 @inject ILogger<Login> Logger
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
 
 <center>
     <div class="col-8 card">
@@ -44,8 +46,8 @@
                         <input type="submit" class="form-control col-6 btn btn-primary" value="SIGN IN" />
                     </div>
                     <br />
-                    <div class="col-12 row" style="text-align:left; font-weight:bold">
-                        <span class="col-12">@LoginMessage</span>
+                    <div class="col-12 row" style="text-align:left; font-weight:bold; color: red">
+                        <span class="col-12">@ErrorMessage</span>
                     </div>
                 </EditForm>
             </div>
@@ -61,21 +63,27 @@
     private UserLoginDto employee;
     public string LoginMessage { get; set; }
     public string ErrorMessage { get; set; }
-    ClaimsPrincipal claimsPrincipal;
 
     protected override void OnInitialized()
     {
         employee = new UserLoginDto();
     }
 
-    private void SignIn()
+    private async Task<bool> SignIn()
     {
-
+        if(await authorizationService.LoginUser(employee))
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(employee);
+            NavigationManager.NavigateTo("/");
+            return true;
+        }
+        else
+        {
+            ErrorMessage = "Nie odnaleziono użytkownika z pasującymi danymi";
+        }
         Logger.LogInformation("SIGN IN called");
+        return false;
 
-        LoginMessage = "Ooo mamy cynk, że kliknąłeś w SIGN IN" + "\n Username: " + employee.Username + "\n Password: " + employee.Password;
-
-        employee.Password = "";
     }
 
 }
