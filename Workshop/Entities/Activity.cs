@@ -13,7 +13,7 @@ namespace Workshop.Entities
         public string Description { get; set; }
         public string Result { get; set; }
         public Status Status { get; set; }
-        public DateTime Reqistered { get; set; }
+        public DateTime Registered { get; set; }
         public DateTime FinishedOrCancelled { get; set; }
         [Required]
         public ActivityType ActivityType { get; set; }

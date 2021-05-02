@@ -45,7 +45,7 @@ namespace Workshop.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Car>> GetAllCars() 
-            => await context.Set<Car>().ToListAsync();
+        public IEnumerable<Car> GetAllCars() 
+            => context.Set<Car>().ToList();
     }
 }

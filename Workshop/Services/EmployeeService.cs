@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
 using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Dtos;
@@ -23,5 +25,8 @@ namespace Workshop.Services
             context.Set<Employee>().Add(employee);
             await context.SaveChangesAsync();
         }
+
+        public IEnumerable<Employee> GetAllUsers()
+        => context.Employee.ToList();      
     }
 }
