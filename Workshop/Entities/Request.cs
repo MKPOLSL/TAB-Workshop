@@ -12,6 +12,7 @@ namespace Workshop.Entities
         public Guid Id { get; set; }
         public string Description { get; set; }
         public string Result { get; set; }
+        [Required]
         public Status Status { get; set; }
         public DateTime Reqistered { get; set; }
         public DateTime FinishedOrCancelled { get; set; }
