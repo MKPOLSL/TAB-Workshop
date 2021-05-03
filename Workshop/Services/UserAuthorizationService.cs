@@ -29,7 +29,7 @@ namespace Workshop.Services
 
         public async Task<Employee> LoginUser(UserLoginDto employee)
         {
-            var user = context.Employee
+            var user = context.Employees
                 .Where(u => u.Username == employee.Username && u.Password == employee.Password)
                 .FirstOrDefault();
 

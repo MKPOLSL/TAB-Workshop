@@ -27,6 +27,6 @@ namespace Workshop.Services
         }
 
         public IEnumerable<Employee> GetAllUsers()
-        => context.Employee.ToList();      
+        => context.Employees.ToList();      
     }
 }

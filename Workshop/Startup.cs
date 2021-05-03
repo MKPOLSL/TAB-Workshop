@@ -9,8 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Workshop.Concrete;
-using Workshop.Contracts;
 using Workshop.DataAccess;
 using Workshop.Interfaces;
 using Workshop.Services;
@@ -36,7 +34,6 @@ namespace Workshop
                           options.UseSqlServer(
                               Configuration.GetConnectionString("DefaultConnection")));
             //services  
-            services.AddScoped<IArticleManager, ArticleManager>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IUserAuthorizationService, UserAuthorizationService>();
@@ -45,7 +42,6 @@ namespace Workshop
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  
-            services.AddScoped<IDapperManager, DapperManager>();
         }
         
 
