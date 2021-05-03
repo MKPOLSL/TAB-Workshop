@@ -9,7 +9,6 @@ namespace Workshop.Interfaces
     interface IActivityService
     {
         IEnumerable<Activity> GetAllActivities();
-
         Task AddActivity();
     }
 }

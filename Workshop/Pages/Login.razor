@@ -58,7 +58,6 @@
     </div>
 </center>
 
-
 @code {
     private UserLoginDto employee;
     public string LoginMessage { get; set; }
@@ -73,7 +72,7 @@
     private async Task<bool> SignIn()
     {
         var user = await authorizationService.LoginUser(employee);
-        if(user != null)
+        if (user != null)
         {
             ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user);
             NavigationManager.NavigateTo("/");

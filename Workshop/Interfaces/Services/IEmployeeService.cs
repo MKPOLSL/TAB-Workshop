@@ -6,10 +6,9 @@ using Workshop.Entities;
 
 namespace Workshop.Interfaces
 {
-    public interface ICarService
+    public interface IEmployeeService
     {
-        IEnumerable<Car> GetAllCars();
-
-        Task AddCar();
+        Task AddEmployee(Employee employee);
+        Task<IEnumerable<Employee>> GetAllUsers();
     }
 }
