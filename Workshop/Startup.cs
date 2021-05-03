@@ -1,5 +1,4 @@
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -7,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Workshop.DataAccess;
 using Workshop.Interfaces;
+using Workshop.Interfaces.Repositories;
+using Workshop.Repositories;
 using Workshop.Services;
 
 namespace Workshop
@@ -39,11 +38,15 @@ namespace Workshop
             services.AddScoped<IUserAuthorizationService, UserAuthorizationService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+
+            //repositories
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  
         }
-        
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

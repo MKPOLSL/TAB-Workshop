@@ -8,16 +8,19 @@ using Workshop.DataAccess;
 using Workshop.Dtos;
 using Workshop.Entities;
 using Workshop.Interfaces;
+using Workshop.Interfaces.Repositories;
 
 namespace Workshop.Services
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly CarContext context;
+        private readonly IEmployeeRepository employeeRepository;
 
-        public EmployeeService(CarContext context)
+        public EmployeeService(CarContext context, IEmployeeRepository employeeRepository)
         {
             this.context = context;
+            this.employeeRepository = employeeRepository;
         }
 
         public async Task AddEmployee(Employee employee) 
@@ -26,7 +29,9 @@ namespace Workshop.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Employee>> GetAllUsers()
-        => await context.Employees.ToListAsync();      
+        //public IEnumerable<Employee> GetAllUsers()
+        //=> context.Employees.ToList();      
+
+        public async Task<IEnumerable<Employee>> GetAllUsers() => await employeeRepository.GetAllAsync();
     }
 }
