@@ -26,7 +26,7 @@ namespace Workshop.Services
             await context.SaveChangesAsync();
         }
 
-        public IEnumerable<Employee> GetAllUsers()
-        => context.Employees.ToList();      
+        public async Task<IEnumerable<Employee>> GetAllUsers()
+        => await context.Employees.ToListAsync();      
     }
 }

@@ -9,6 +9,6 @@ namespace Workshop.Interfaces
     public interface IEmployeeService
     {
         Task AddEmployee(Employee employee);
-        IEnumerable<Employee> GetAllUsers();
+        Task<IEnumerable<Employee>> GetAllUsers();
     }
 }
