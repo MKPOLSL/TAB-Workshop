@@ -35,7 +35,7 @@
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteClient(client)">Usuń</button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddCar()">Przypisz samochód</button>
+                        <button type="button" class="btn btn-primary" @onclick="() => AddCar(client.Id)">Przypisz samochód</button>
                     </td>
                 </tr>
             }
@@ -44,6 +44,8 @@
 </table>
 
 @code {
+
+    public Guid ClientId { get; set; }
     private IEnumerable<Client> clients;
 
     protected override async Task OnInitializedAsync()
@@ -64,8 +66,9 @@
         navigationManager.NavigateTo("/clients", forceLoad: true);
     }
 
-    void AddCar()
+    void AddCar(Guid id)
     {
-        navigationManager.NavigateTo("/cars");
+        ClientId = id;
+        navigationManager.NavigateTo($"/addCar/{ClientId}");
     }
 }

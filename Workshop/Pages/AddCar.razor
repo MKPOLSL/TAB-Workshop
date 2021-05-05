@@ -1,4 +1,5 @@
 ﻿@page "/addCar"
+@page "/addCar/{ClientId:guid}"
 @inject ICarService carService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @attribute [AuthorizeRoles(Role.Manager)]
@@ -10,6 +11,10 @@
 <div class="row">
     <div class="col-md-4">
         <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">Klient</label>
+                <input for="Name" class="form-control" @bind-value="@car.Client.Id" />
+            </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Marka</label>
                 <input for="Name" class="form-control" @bind-value="@car.Brand" />
@@ -29,7 +34,6 @@
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
                 <select for="Role" class="form-control">
-
                 </select>
             </div>
             <div class="form-group">
@@ -41,7 +45,19 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public Guid ClientId { get; set; }
     private Car car = new Car();
+
+    protected override void OnParametersSet()
+    {
+        car = new Car
+        {
+            Client = new Client { Id = ClientId }
+        };
+        //pobieram klienta po ID
+    }
 
     protected async Task CreateCar()
     {
