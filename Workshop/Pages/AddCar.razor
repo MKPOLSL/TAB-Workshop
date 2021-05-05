@@ -43,9 +43,9 @@
 @code {
     private Car car = new Car();
 
-    protected void CreateCar()
+    protected async Task CreateCar()
     {
-        carService.AddCar();
+        await carService.AddCar(car);
         navigationManager.NavigateTo("/clients");
     }
 

@@ -12,45 +12,17 @@ namespace Workshop.Services
 {
     public class CarService : ICarService
     {
-        private readonly CarContext context;
         private readonly ICarRepository carRepository;
 
         public CarService(CarContext context, ICarRepository carRepository)
         {
-            this.context = context;
             this.carRepository = carRepository;
         }
 
-        public async Task AddCar()
-        {
-            var car = new List<Car>
-            {
-                new Car{
-                Id = Guid.NewGuid(),
-                Brand = "Lancia",
-                Model = "Lybra",
-                ProductionYear = 2000
-                },
-                new Car{
-                Id = Guid.NewGuid(),
-                Brand = "Audi",
-                Model = "A4",
-                ProductionYear = 2008
-                },
-                new Car{
-                Id = Guid.NewGuid(),
-                Brand = "Fiat",
-                Model = "124p",
-                ProductionYear = 1981
-                },
-            };
-            context.Set<Car>().AddRange(car);
-            await context.SaveChangesAsync();
-        }
         public async Task AddCar(Car car)
         {
-            context.Set<Car>().Add(car);
-            await context.SaveChangesAsync();
+            await carRepository.CreateAsync(car);
+            await carRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Car>> GetAllCars() => await carRepository.GetAllAsync();
