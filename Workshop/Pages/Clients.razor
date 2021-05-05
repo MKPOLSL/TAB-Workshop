@@ -32,7 +32,7 @@
                     <td>@client.PhoneNumber</td>
                     <td>
                         <button type="button" class="btn btn-warning">Edytuj</button>
-                        <button type="button" class="btn btn-danger">Usuń</button>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteClient(client)">Usuń</button>
                     </td>
                     <td>
                         <button type="button" class="btn btn-primary">Przypisz samochód</button>
@@ -52,4 +52,10 @@
     }
 
     void AddNewClient() => navigationManager.NavigateTo("/addClient");
+
+    public async Task DeleteClient(Client client)
+    {
+        await clientService.DeleteClient(client);
+        navigationManager.NavigateTo("/clients", forceLoad: true);
+    }
 }

@@ -10,5 +10,7 @@ namespace Workshop.Interfaces
         Task AddClient(ClientCreateDto client);
 
         Task<IEnumerable<Client>> GetClients();
+
+        Task DeleteClient(Client client);
     }
 }

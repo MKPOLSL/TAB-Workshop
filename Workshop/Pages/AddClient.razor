@@ -37,7 +37,7 @@
     protected async Task CreateClient()
     {
         await clientService.AddClient(client);
-        navigationManager.NavigateTo("/articlelist");
+        navigationManager.NavigateTo("/clients");
     }
 
     void cancel() => navigationManager.NavigateTo("/clients");
