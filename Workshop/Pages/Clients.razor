@@ -44,17 +44,11 @@
 </table>
 
 @code {
-    //private Client[] clients;
-
-    //Temporary List to tests.
-    List<Client> clients = new List<Client>();
+    private IEnumerable<Client> clients;
 
     protected override async Task OnInitializedAsync()
     {
-        //Temporary New Clients to tests.
-        clients.Add(new Client() { FirstName = "Jan", LastName = "Kowal", PhoneNumber = "123987456" });
-        clients.Add(new Client() { FirstName = "Anna", LastName = "Nowak", PhoneNumber = "986345872" });
-        clients.Add(new Client() { FirstName = "Piotr", LastName = "Opona", PhoneNumber = "829619782" });
+        clients = await clientService.GetClients();
     }
 
     void AddNewClient() => navigationManager.NavigateTo("/addClient");
