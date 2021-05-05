@@ -9,6 +9,7 @@ using Workshop.Utils;
 
 namespace Workshop.Repositories
 {
+
     public class CarTypeRepository : RepositoryBase<CarType>, ICarTypeRepository
     {
         public CarTypeRepository(CarContext context) : base(context) { }

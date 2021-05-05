@@ -8,6 +8,6 @@ namespace Workshop.Interfaces
 {
     public interface ICarTypeService
     {
-
+        Task<IEnumerable<CarType>> GetAllTypes();
     }
 }

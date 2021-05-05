@@ -20,5 +20,10 @@ namespace Workshop.Services
             this.context = context;
             this.carTypeRepository = carTypeRepository;
         }
+
+        public async Task<IEnumerable<CarType>> GetAllTypes()
+        {
+            return await carTypeRepository.GetAllAsync();
+        }
     }
 }
