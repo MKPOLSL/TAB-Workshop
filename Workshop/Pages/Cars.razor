@@ -14,7 +14,7 @@
             <th>Klient</th>
             <th>Akcje</th>
             <th>
-                <button type="button" class="btn btn-primary" @onclick="() => AddCar()">Dodaj samochód</button>
+                <button type="button" class="btn btn-primary" @onclick="() => AddNewCar()">Dodaj samochód</button>
             </th>
         </tr>
     </thead>
@@ -55,6 +55,16 @@
 
     }
 
+    void AddNewCar()
+    {
+        navigationManager.NavigateTo("/addCar");
+    }
+
+    void EditCar()
+    {
+
+    }
+
     public async Task DeleteCar(Car car)
     {
         //await carService.DeleteCar(car);
@@ -66,8 +76,5 @@
         navigationManager.NavigateTo("/");
     }
 
-    void EditCar()
-    {
 
-    }
 }

@@ -47,6 +47,11 @@ namespace Workshop.Services
             context.Set<Car>().AddRange(car);
             await context.SaveChangesAsync();
         }
+        public async Task AddCar(Car car)
+        {
+            context.Set<Car>().Add(car);
+            await context.SaveChangesAsync();
+        }
 
         public async Task<IEnumerable<Car>> GetAllCars() => await carRepository.GetAllAsync();
 
