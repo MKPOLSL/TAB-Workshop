@@ -43,6 +43,7 @@ namespace Workshop
             //repositories
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<ICarRepository, CarRepository>();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  

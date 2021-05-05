@@ -1,0 +1,60 @@
+﻿@page "/cars"
+@inject ICarService carService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
+<h1>Samochody</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Numer Rejestracyjny</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Klient</th>
+            <th>Akcje</th>
+            <th>
+                <button type="button" class="btn btn-primary" @onclick="() => AddNewCar()">Dodaj samochód</button>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (cars == null)
+        {
+            <p><em>Ładuję...</em></p>
+        }
+        else
+        {
+            @foreach (var car in cars)
+            {
+                <tr>
+                    <td>@car.RegistrationNumber</td>
+                    <td>@car.Brand</td>
+                    <td>@car.Model</td>
+                    <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
+                    <td>
+                        <button type="button" class="btn btn-warning">Edytuj</button>
+                        <button type="button" class="btn btn-danger">Usuń</button>
+                    </td>
+        
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private IEnumerable<Car> cars;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cars = await carService.GetAllCarsWithClients();
+        base.OnInitializedAsync();
+
+    }
+
+    void AddNewCar()
+    {
+
+    }
+}

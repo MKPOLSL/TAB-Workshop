@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
 using Workshop.Interfaces;
+using Workshop.Interfaces.Repositories;
 
 namespace Workshop.Services
 {
     public class CarService : ICarService
     {
         private readonly CarContext context;
+        private readonly ICarRepository carRepository;
 
-        public CarService(CarContext context)
+        public CarService(CarContext context, ICarRepository carRepository)
         {
             this.context = context;
+            this.carRepository = carRepository;
         }
 
         public async Task AddCar()
@@ -45,7 +48,8 @@ namespace Workshop.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Car>> GetAllCars() 
-            => await context.Cars.ToListAsync();
+        public async Task<IEnumerable<Car>> GetAllCars() => await carRepository.GetAllAsync();
+
+        public async Task<IEnumerable<Car>> GetAllCarsWithClients() => await carRepository.GetAllWithClientsAsync();
     }
 }
