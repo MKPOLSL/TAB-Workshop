@@ -8,7 +8,7 @@ namespace Workshop.Interfaces
 {
     public interface ICarService
     {
-        IEnumerable<Car> GetAllCars();
+        Task<IEnumerable<Car>> GetAllCars();
         Task AddCar();
     }
 }

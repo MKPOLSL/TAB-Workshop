@@ -1,0 +1,61 @@
+﻿@page "/clients"
+@inject IClientService clientService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
+<h1>Klienci</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Numer telefonu</th>
+            <th>Akcje</th>
+            <th>
+                <button type="button" class="btn btn-primary" @onclick="() => AddNewClient()">Dodaj nowego klienta</button>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (clients == null)
+        {
+            <p><em>Ładuję...</em></p>
+        }
+        else
+        {
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td>@client.FirstName</td>
+                    <td>@client.LastName</td>
+                    <td>@client.PhoneNumber</td>
+                    <td>
+                        <button type="button" class="btn btn-warning">Edytuj</button>
+                        <button type="button" class="btn btn-danger">Usuń</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary">Przypisz samochód</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    //private Client[] clients;
+
+    //Temporary List to tests.
+    List<Client> clients = new List<Client>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Temporary New Clients to tests.
+        clients.Add(new Client() { FirstName = "Jan", LastName = "Kowal", PhoneNumber = "123987456" });
+        clients.Add(new Client() { FirstName = "Anna", LastName = "Nowak", PhoneNumber = "986345872" });
+        clients.Add(new Client() { FirstName = "Piotr", LastName = "Opona", PhoneNumber = "829619782" });
+    }
+
+    void AddNewClient() => navigationManager.NavigateTo("/addClient");
+}
