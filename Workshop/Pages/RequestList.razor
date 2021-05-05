@@ -40,7 +40,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        requests = new List<Request> { new Request() }; // _activityService.GetAllActivities().ToList();
+        requests = new List<Request> { new Request() {
+        Car = new Car
+        {
+            Brand = "Brand",
+            Model = "Model",
+            Client = new Client()
+        },
+        Description = "Description",
+        Result = "Result",
+        Status = Status.InProgress,
+        Reqistered = DateTime.Now,
+        FinishedOrCancelled = DateTime.Now
+        } }; // _activityService.GetAllActivities().ToList();
         base.OnInitializedAsync();
     }
 
