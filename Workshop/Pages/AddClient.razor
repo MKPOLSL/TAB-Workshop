@@ -11,20 +11,20 @@
     <div class="col-md-4">
         <form>
             <div class="form-group">
-                <label for="Name" class="control-label">imię</label>
+                <label for="Name" class="control-label">Imię</label>
                 <input for="Name" class="form-control" @bind-value="@client.FirstName" />
             </div>
             <div class="form-group">
-                <label for="Name" class="control-label">nazwisko</label>
+                <label for="Name" class="control-label">Nazwisko</label>
                 <input for="Name" class="form-control" @bind-value="@client.LastName" />
             </div>
             <div class="form-group">
-                <label for="Name" class="control-label">numer telefonu</label>
+                <label for="Name" class="control-label">Numer Telefonu</label>
                 <input for="Name" class="form-control" @bind-value="@client.PhoneNumber" />
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-primary" @onclick="() => CreateClient()">Zapisz</button>
-                <button type="button" class="btn btn-danger" @onclick="() => cancel()">Anuluj</button>
+                <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
             </div>
         </form>
     </div>
@@ -37,8 +37,8 @@
     protected async Task CreateClient()
     {
         await clientService.AddClient(client);
-        navigationManager.NavigateTo("/articlelist");
+        navigationManager.NavigateTo("/clients");
     }
 
-    void cancel() => navigationManager.NavigateTo("/clients");
+    void Cancel() => navigationManager.NavigateTo("/clients");
 }

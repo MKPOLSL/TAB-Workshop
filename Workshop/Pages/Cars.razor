@@ -33,10 +33,12 @@
                     <td>@car.Model</td>
                     <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
                     <td>
-                        <button type="button" class="btn btn-warning">Edytuj</button>
-                        <button type="button" class="btn btn-danger">Usuń</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => EditCar()">Edytuj</button>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
                     </td>
-        
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => AddCar()">Przypisz</button>
+                    </td>
                 </tr>
             }
         }
@@ -53,8 +55,14 @@
 
     }
 
-    void AddNewCar()
+    public async Task DeleteCar(Car car)
     {
+        //await carService.DeleteCar(car);
+        navigationManager.NavigateTo("/cars", forceLoad: true);
+    }
 
+    void AddCar()
+    {
+        navigationManager.NavigateTo("/");
     }
 }

@@ -39,5 +39,11 @@ namespace Workshop.Services
         {
             return await clientRepository.GetAllAsync();
         }
+
+        public async Task DeleteClient(Client client)
+        {
+            clientRepository.Delete(client);
+            await clientRepository.SaveChangesAsync();
+        }
     }
 }
