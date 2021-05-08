@@ -1,9 +1,26 @@
 ﻿@page "/"
 
 <h1>System Obsługi Napraw</h1>
+<br />
 
-Witam wszystkich serdecznie. W drugiej zakładce test działania bazy Azure.
-Hello - Dziala!
-PROSTE. Dzień dobry
-
-<img src="/images/jc.png" alt="Cieślak">
+<AuthorizeView>
+    <NotAuthorized>
+        Witaj w serwisie!<br />
+        Zaloguj się, aby skorzystać z jego funkcjonalności.
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="@($"{Role.Manager}")">
+    <Authorized>
+        Witaj menadżerze!
+    </Authorized>
+</AuthorizeView>
+<AuthorizeView Roles="@($"{Role.Worker}")">
+    <Authorized>
+        Witaj pracowniku!
+    </Authorized>
+</AuthorizeView>
+<AuthorizeView Roles="@($"{Role.Administrator}")">
+    <Authorized>
+        Witaj adminie!<br />
+    </Authorized>
+</AuthorizeView>

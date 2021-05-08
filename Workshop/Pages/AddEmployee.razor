@@ -4,7 +4,7 @@
 @attribute [AuthorizeRoles(Role.Administrator)]
 
 <h1>
-    Dodaj użytkownika
+    Dodaj pracownika
 </h1>
 
 <div class="row">
@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Hasło</label>
-                <input for="Name" class="form-control" @bind-value="@employee.Password" />
+                <input for="Name" type ="password" class="form-control" @bind-value="@employee.Password" />
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Rola</label>
