@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
@@ -20,6 +22,17 @@ namespace Workshop.Repositories
                   .GetAllNotHidden()
                   .Include(c => c.Client)
                   .ToListAsync();
+        }
+
+        public async Task<Car> GetCar(Guid id)
+        {
+            return await Context
+                  .Set<Car>()
+                  .GetAllNotHidden()
+                  .Include(c => c.Client)
+                  .Include(c => c.CarType)
+                  .Where(c => c.Id == id)
+                  .FirstOrDefaultAsync();
         }
     }
 }

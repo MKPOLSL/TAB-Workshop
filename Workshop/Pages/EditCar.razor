@@ -1,7 +1,6 @@
 ﻿@page "/editCar/{CarId:guid}"
 @inject ICarService carService
 @inject ICarTypeService carTypeService
-@inject CarContext carContext
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @attribute [AuthorizeRoles(Role.Manager)]
 
@@ -28,7 +27,7 @@
                 <label for="Name" class="control-label">Numer rejestracyjny</label>
                 <input for="Name" class="form-control" @bind-value="@car.RegistrationNumber" />
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
                 <select for="Role" class="form-control" @bind="@carClientId">
                     @foreach (Client client in clients)
@@ -36,10 +35,10 @@
                         <option value="@client.Id">@client.FirstName @client.LastName</option>
                     }
                 </select>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control" @bind="@carType">
+                <select for="Role" class="form-control" @bind="@car.CarType.TypeName">
                     @foreach (CarType cartype in cartypes)
                     {
                         <option value="@cartype.TypeName">@cartype.TypeName</option>
@@ -59,40 +58,42 @@
     [Parameter]
     public Guid CarId { get; set; }
     private Car car = new Car();
-    private string carType;
-    private System.Guid carClientId;
+    //private string carType;
+    //private System.Guid carClientId;
     private IEnumerable<CarType> cartypes = new List<CarType>();
     private IEnumerable<Client> clients = new List<Client>();
 
+    protected override async Task OnParametersSetAsync()
+    {
+        //car = carContext.Cars.Find(CarId);
+        car = await carService.GetCar(CarId);
+        cartypes = await carTypeService.GetAllTypes();
+        //carType = car.CarType.TypeName;
+        //carClientId = car.Client.Id;
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        cartypes = await carTypeService.GetAllTypes();
-        carType = cartypes.First().TypeName;
-        clients = carContext.Clients;
+        car.CarType = new CarType();
     }
 
-    protected override void OnParametersSet()
-    {
-        car = carContext.Cars.Find(CarId);
-        carClientId = car.Client.Id;
-    }
+    //private CarType carTypeMapper(string typeName)
+    //{
+    //    return cartypes.Where(c => c.TypeName.Equals(typeName)).FirstOrDefault();
+    //}
 
-    private CarType carTypeMapper(string typeName)
-    {
-        return cartypes.Where(c => c.TypeName.Equals(typeName)).FirstOrDefault();
-    }
-
-    private Client carClientMapper(System.Guid clientId)
-    {
-        return clients.Where(c => c.Id.Equals(clientId)).FirstOrDefault();
-    }
+    //private Client carClientMapper(System.Guid clientId)
+    //{
+    //    return clients.Where(c => c.Id.Equals(clientId)).FirstOrDefault();
+    //}
 
     protected async Task DoEditCar(Car car)
     {
-        car.CarType = carTypeMapper(carType);
-        car.Client = carClientMapper(carClientId);
+        //car.CarType = carTypeMapper(carType);
+        //car.Client = carClientMapper(carClientId);
+        car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
         await carService.EditCar(car);
-        navigationManager.NavigateTo("/clients");
+        navigationManager.NavigateTo("/cars");
     }
 
     void Cancel() => navigationManager.NavigateTo("/clients");

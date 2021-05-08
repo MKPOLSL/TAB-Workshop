@@ -27,8 +27,13 @@ namespace Workshop.Services
 
         public async Task EditCar(Car car)
         {
-            await carRepository.UpdateAsync(car);
+            carRepository.Update(car);
             await carRepository.SaveChangesAsync();
+        }
+
+        public async Task<Car> GetCar(Guid Id)
+        {
+            return await carRepository.GetCar(Id);
         }
 
         public async Task<IEnumerable<Car>> GetAllCars() => await carRepository.GetAllAsync();

@@ -12,5 +12,6 @@ namespace Workshop.Interfaces
         Task<IEnumerable<Car>> GetAllCarsWithClients();
         Task AddCar(Car car);
         Task EditCar(Car car);
+        Task<Car> GetCar(Guid id);
     }
 }

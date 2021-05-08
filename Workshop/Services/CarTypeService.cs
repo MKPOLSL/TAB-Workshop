@@ -25,5 +25,10 @@ namespace Workshop.Services
         {
             return await carTypeRepository.GetAllAsync();
         }
+
+        public async Task<CarType> GetTypeByTypeName(string typeName)
+        {
+            return await carTypeRepository.GetTypeByTypeName(typeName);
+        }
     }
 }

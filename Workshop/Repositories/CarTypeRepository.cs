@@ -15,12 +15,21 @@ namespace Workshop.Repositories
     {
         public CarTypeRepository(CarContext context) : base(context) { }
 
-        public virtual async Task<IEnumerable<CarType>> GetAllAsync()
+        public Task<CarType> GetTypeByTypeName(string typeName)
         {
             return Context
                 .Set<CarType>()
                 .GetAllNotHidden()
-                .ToList();
+                .Where(ct => ct.TypeName == typeName)
+                .FirstOrDefaultAsync();
         }
+
+        //public virtual async Task<IEnumerable<CarType>> GetAllAsync()
+        //{
+        //    return Context
+        //        .Set<CarType>()
+        //        .GetAllNotHidden()
+        //        .ToList();
+        //}
     }
 }
