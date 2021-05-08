@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Workshop.Entities;
 
 namespace Workshop.DataAccess
@@ -15,6 +16,16 @@ namespace Workshop.DataAccess
 
         public CarContext(DbContextOptions<CarContext> options) : base(options) { }
 
+        public Client findClientById (Guid id)
+        {
+            foreach (Client client in Clients)
+            {
+                if (client.Id.Equals(id))
+                    return client;
+            }
+            return null;
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>()
@@ -25,5 +36,6 @@ namespace Workshop.DataAccess
                 .HasIndex(b => b.RegistrationNumber)
                 .IsUnique();
         }
+
     }
 }

@@ -2,6 +2,7 @@
 @page "/addCar/{ClientId:guid}"
 @inject ICarService carService
 @inject ICarTypeService carTypeService
+@inject CarContext carContext
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @attribute [AuthorizeRoles(Role.Manager)]
 
@@ -9,13 +10,13 @@
     Dodaj/Powiąż Samochód
 </h1>
 
+<h2>
+    Klient: @car.Client.FirstName @car.Client.LastName
+</h2>
+
 <div class="row">
     <div class="col-md-4">
         <form>
-            <div class="form-group">
-                <label for="Name" class="control-label">Klient</label>
-                <input for="Name" class="form-control" readonly @bind-value="@car.Client.Id" />
-            </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Marka</label>
                 <input for="Name" class="form-control" @bind-value="@car.Brand" />
@@ -67,7 +68,7 @@
     {
         car = new Car
         {
-            Client = new Client { Id = ClientId }
+            Client = carContext.findClientById(ClientId)
         };
         //pobieram klienta po ID
         //TO DO nie tworzyc nowego klienta tylko przypisywac istniejacego
