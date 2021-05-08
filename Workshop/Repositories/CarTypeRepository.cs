@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
@@ -13,5 +14,13 @@ namespace Workshop.Repositories
     public class CarTypeRepository : RepositoryBase<CarType>, ICarTypeRepository
     {
         public CarTypeRepository(CarContext context) : base(context) { }
+
+        public virtual async Task<IEnumerable<CarType>> GetAllAsync()
+        {
+            IQueryable<CarType> set = Context
+                .Set<CarType>()
+                .GetAllNotHidden();
+            return  set.ToList();
+        }
     }
 }

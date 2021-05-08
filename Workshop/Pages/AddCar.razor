@@ -1,4 +1,4 @@
-﻿@page "/addCar"
+﻿@*@page "/addCar"*@
 @page "/addCar/{ClientId:guid}"
 @inject ICarService carService
 @inject ICarTypeService carTypeService
@@ -14,7 +14,7 @@
         <form>
             <div class="form-group">
                 <label for="Name" class="control-label">Klient</label>
-                <input for="Name" class="form-control" @bind-value="@car.Client.Id" />
+                <input for="Name" class="form-control" readonly @bind-value="@car.Client.Id" />
             </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Marka</label>
@@ -34,15 +34,15 @@
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control">
+                <select for="Role" class="form-control"  @bind="@carType.TypeName">
                     @foreach (CarType cartype in cartypes)
                     {
-                        <option value="@cartype">@cartype.TypeName</option>
+                        <option value="@cartype.TypeName">@cartype.TypeName</option>
                     }
                 </select>
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary" @onclick="() => CreateCar()">Zapisz</button>
+                <button type="button" class="btn btn-primary" @onclick="() => CreateCar(car)">Zapisz</button>
                 <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
             </div>
         </form>
@@ -54,11 +54,13 @@
     [Parameter]
     public Guid ClientId { get; set; }
     private Car car = new Car();
+    private CarType carType = new CarType();
     private IEnumerable<CarType> cartypes = new List<CarType>();
 
     protected override async Task OnInitializedAsync()
     {
         cartypes = await carTypeService.GetAllTypes();
+        carType = cartypes.First();
     }
 
     protected override void OnParametersSet()
@@ -68,10 +70,22 @@
             Client = new Client { Id = ClientId }
         };
         //pobieram klienta po ID
+        //TO DO nie tworzyc nowego klienta tylko przypisywac istniejacego
     }
 
-    protected async Task CreateCar()
+    private CarType carTypeMapper(string typeName)
     {
+        foreach(CarType elem in this.cartypes)
+        {
+            if (elem.TypeName.Equals(typeName))
+                return elem;
+        }
+        return null;
+    }
+
+    protected async Task CreateCar(Car car)
+    {
+        car.CarType = carTypeMapper(carType.TypeName);
         await carService.AddCar(car);
         navigationManager.NavigateTo("/clients");
     }

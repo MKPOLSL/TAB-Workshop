@@ -13,9 +13,9 @@
             <th>Model</th>
             <th>Klient</th>
             <th>Akcje</th>
-            <th>
+            @*<th>
                 <button type="button" class="btn btn-primary" @onclick="() => AddNewCar()">Dodaj samochód</button>
-            </th>
+            </th>*@
         </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddCar()">Przypisz</button>
+                        <button type="button" class="btn btn-primary" @onclick="() => AddCar(car)">Przypisz</button>
                     </td>
                 </tr>
             }
@@ -55,10 +55,13 @@
 
     }
 
-    void AddNewCar()
-    {
-        navigationManager.NavigateTo("/addCar");
-    }
+    //void AddNewCar()
+    //{
+    //    navigationManager.NavigateTo("/addCar");
+    //}
+
+
+    //void AddNewCar() => navigationManager.NavigateTo("/addCar");
 
     void EditCar()
     {
@@ -71,9 +74,9 @@
         navigationManager.NavigateTo("/cars", forceLoad: true);
     }
 
-    void AddCar()
+    void AddCar(Car car)
     {
-        navigationManager.NavigateTo("/");
+        navigationManager.NavigateTo($"/addCar/{car.Client.Id}");
     }
 
 
