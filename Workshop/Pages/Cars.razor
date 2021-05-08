@@ -5,23 +5,23 @@
 
 <h1>Samochody</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Numer Rejestracyjny</th>
-            <th>Marka</th>
-            <th>Model</th>
-            <th>Klient</th>
-            <th>Akcje</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (cars == null)
-        {
-            <div class="spinner"></div>
-        }
-        else
-        {
+@if (cars == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numer Rejestracyjny</th>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Klient</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach (var car in cars)
             {
                 <tr>
@@ -38,9 +38,9 @@
                     </td>
                 </tr>
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
 
 @code {
     private IEnumerable<Car> cars;
@@ -48,7 +48,7 @@
     protected override async Task OnInitializedAsync()
     {
         cars = await carService.GetAllCarsWithClients();
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
     }
 

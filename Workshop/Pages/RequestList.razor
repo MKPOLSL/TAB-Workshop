@@ -1,9 +1,14 @@
 ﻿@page "/requestList"
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-<head>
-    RequestList
-</head>
-<body>
+
+<h1>Klienci</h1>
+
+@if (requests == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
     <table id="activityTable" class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -33,7 +38,7 @@
             }
         </tbody>
     </table>
-</body>
+}
 
 @code {
     public List<Request> requests = new List<Request>();
@@ -53,7 +58,7 @@
         Reqistered = DateTime.Now,
         FinishedOrCancelled = DateTime.Now
         } }; // _activityService.GetAllActivities().ToList();
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
     protected void ChangePage(Request request)

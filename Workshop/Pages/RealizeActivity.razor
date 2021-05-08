@@ -41,7 +41,7 @@
     protected override async Task OnInitializedAsync()
     {
         activities = new List<Activity> { new Activity() }; // _activityService.GetAllActivities().ToList();
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
     public List<Activity> activities = new List<Activity>();

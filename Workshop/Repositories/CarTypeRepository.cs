@@ -17,10 +17,10 @@ namespace Workshop.Repositories
 
         public virtual async Task<IEnumerable<CarType>> GetAllAsync()
         {
-            IQueryable<CarType> set = Context
+            return Context
                 .Set<CarType>()
-                .GetAllNotHidden();
-            return  set.ToList();
+                .GetAllNotHidden()
+                .ToList();
         }
     }
 }

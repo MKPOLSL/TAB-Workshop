@@ -5,25 +5,26 @@
 
 <h1>Klienci</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Imię</th>
-            <th>Nazwisko</th>
-            <th>Numer telefonu</th>
-            <th>Akcje</th>
-            <th>
-                <button type="button" class="btn btn-primary" @onclick="() => AddNewClient()">Dodaj nowego klienta</button>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (clients == null)
-        {
-            <div class="spinner"></div>
-        }
-        else
-        {
+@if (clients == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Numer telefonu</th>
+                <th>Akcje</th>
+                <th>
+                    <button type="button" class="btn btn-primary" @onclick="() => AddNewClient()">Dodaj nowego klienta</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
             @foreach (var client in clients)
             {
                 <tr>
@@ -39,9 +40,9 @@
                     </td>
                 </tr>
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
 
 @code {
 
