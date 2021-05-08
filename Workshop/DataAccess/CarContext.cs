@@ -18,12 +18,7 @@ namespace Workshop.DataAccess
 
         public Client findClientById (Guid id)
         {
-            foreach (Client client in Clients)
-            {
-                if (client.Id.Equals(id))
-                    return client;
-            }
-            return null;
+            return Clients.Find(id);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
