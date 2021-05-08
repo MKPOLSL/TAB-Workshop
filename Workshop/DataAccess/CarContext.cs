@@ -15,12 +15,7 @@ namespace Workshop.DataAccess
         public DbSet<Request> Requests { get; set; }
 
         public CarContext(DbContextOptions<CarContext> options) : base(options) { }
-
-        public Client findClientById (Guid id)
-        {
-            return Clients.Find(id);
-        }
-
+                
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>()

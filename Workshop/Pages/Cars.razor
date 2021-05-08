@@ -30,7 +30,7 @@ else
                     <td>@car.Model</td>
                     <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
                     <td>
-                        <button type="button" class="btn btn-warning" @onclick="() => EditCar()">Edytuj</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
                     </td>
                     <td>
@@ -52,9 +52,9 @@ else
 
     }
 
-    void EditCar()
+    void EditCar(Car car)
     {
-
+        navigationManager.NavigateTo($"/editCar/{car.Id}");
     }
 
     public async Task DeleteCar(Car car)
