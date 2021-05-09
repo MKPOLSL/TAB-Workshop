@@ -23,13 +23,5 @@ namespace Workshop.Repositories
                 .Where(ct => ct.TypeName == typeName)
                 .FirstOrDefaultAsync();
         }
-
-        //public virtual async Task<IEnumerable<CarType>> GetAllAsync()
-        //{
-        //    return Context
-        //        .Set<CarType>()
-        //        .GetAllNotHidden()
-        //        .ToList();
-        //}
     }
 }

@@ -1,7 +1,7 @@
 @page "/addCar/{ClientId:guid}"
 @inject ICarService carService
 @inject ICarTypeService carTypeService
-@inject CarContext carContext
+@inject IClientService clientService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @attribute [AuthorizeRoles(Role.Manager)]
 
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control"  @bind="@carType">
+                <select for="Role" class="form-control"  @bind="@car.CarType.TypeName">
                     @foreach (CarType cartype in cartypes)
                     {
                         <option value="@cartype.TypeName">@cartype.TypeName</option>
@@ -54,31 +54,23 @@
     [Parameter]
     public Guid ClientId { get; set; }
     private Car car = new Car();
-    private string carType;
     private IEnumerable<CarType> cartypes = new List<CarType>();
 
     protected override async Task OnInitializedAsync()
     {
+        car.CarType = new CarType();
+        car.Client = new Client();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
         cartypes = await carTypeService.GetAllTypes();
-        carType = cartypes.First().TypeName;
-    }
-
-    protected override void OnParametersSet()
-    {
-        car = new Car
-        {
-            Client = carContext.Clients.Find(ClientId)
-        };
-    }
-
-    private CarType carTypeMapper(string typeName)
-    {
-        return cartypes.Where(c => c.TypeName.Equals(typeName)).FirstOrDefault();
+        car.Client = await clientService.GetClientById(ClientId);
     }
 
     protected async Task CreateCar(Car car)
     {
-        car.CarType = carTypeMapper(carType);
+        car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
         await carService.AddCar(car);
         navigationManager.NavigateTo("/clients");
     }
