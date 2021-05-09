@@ -9,5 +9,7 @@ namespace Workshop.Interfaces
 {
     public interface IEmployeeService : IServiceBase<Employee>
     {
+        Task<IEnumerable<Employee>> GetAllManagers();
+        Task<Employee> GetById(Guid id);
     }
 }

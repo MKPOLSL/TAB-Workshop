@@ -1,0 +1,67 @@
+﻿@page "/addRequest"
+@inject ICarService carService
+@inject IEmployeeService employeeService
+@inject IClientService clientService
+@inject IRequestService requestService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
+<h1>
+    Rejestruj Zgłoszenie
+</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">Opis Zgłoszenia</label>
+                <input for="Name" class="form-control" @bind-value="@request.Description" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Numer Rejestracyjny</label>
+                <input for="Name" class="form-control" @bind-value="@request.Car.RegistrationNumber" />
+            </div>
+            <div class="form-group">
+                <label for="Role" class="control-label">Menadżer odpowiedzialny</label>
+                <select for="Name" class="form-control" @bind="request.Manager.Id">
+                    @foreach (var manager in managers)
+                    {
+                        <option value=@manager.Id>@(manager.FirstName + " " + manager.LastName)</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" @onclick="() => CreateRequest(request)">Zapisz</button>
+                <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+
+    private Request request = new Request
+    {
+        Car = new Car(),
+        Manager = new Employee(),
+        Activities = new List<Activity>()
+    };
+    private IEnumerable<Employee> managers = new List<Employee>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        managers = await employeeService.GetAllManagers();
+        request.Manager = managers.First();
+    }
+
+    protected async Task CreateRequest(Request request)
+    {
+        this.request.Reqistered = DateTime.Now;
+        this.request.Car = await carService.GetCarByRegistrationNumber(request.Car.RegistrationNumber);
+        this.request.Manager = await employeeService.GetById(request.Manager.Id);
+        await requestService.CreateAsync(request);
+        await requestService.SaveChangesAsync();
+    }
+
+    void Cancel() => navigationManager.NavigateTo("/clients");
+}

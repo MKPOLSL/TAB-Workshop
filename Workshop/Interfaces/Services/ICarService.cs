@@ -11,5 +11,6 @@ namespace Workshop.Interfaces
     {
         Task<IEnumerable<Car>> GetAllCarsWithClients();
         Task<Car> GetCar(Guid id);
+        Task<Car> GetCarByRegistrationNumber(string registrationNumber);
     }
 }

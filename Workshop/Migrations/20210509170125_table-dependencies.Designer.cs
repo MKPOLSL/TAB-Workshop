@@ -10,8 +10,8 @@ using Workshop.DataAccess;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(CarContext))]
-    [Migration("20210503113604_fix-naming")]
-    partial class fixnaming
+    [Migration("20210509170125_table-dependencies")]
+    partial class tabledependencies
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,7 +66,7 @@ namespace Workshop.Migrations
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("Activity");
+                    b.ToTable("Activities");
                 });
 
             modelBuilder.Entity("Workshop.Entities.ActivityType", b =>
@@ -83,7 +83,7 @@ namespace Workshop.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("ActivityType");
+                    b.ToTable("ActivityTypes");
                 });
 
             modelBuilder.Entity("Workshop.Entities.Car", b =>
@@ -141,7 +141,7 @@ namespace Workshop.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("CarType");
+                    b.ToTable("CarTypes");
                 });
 
             modelBuilder.Entity("Workshop.Entities.Client", b =>
@@ -167,7 +167,7 @@ namespace Workshop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Client");
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Workshop.Entities.Employee", b =>
@@ -218,7 +218,7 @@ namespace Workshop.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FinishedOrCancelled")
+                    b.Property<DateTime?>("FinishedOrCancelled")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsHidden")
@@ -242,7 +242,7 @@ namespace Workshop.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Request");
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("Workshop.Entities.Activity", b =>
@@ -260,7 +260,7 @@ namespace Workshop.Migrations
                         .IsRequired();
 
                     b.HasOne("Workshop.Entities.Employee", "Worker")
-                        .WithMany("Activities")
+                        .WithMany()
                         .HasForeignKey("WorkerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -292,7 +292,7 @@ namespace Workshop.Migrations
                     b.HasOne("Workshop.Entities.Employee", "Manager")
                         .WithMany("Requests")
                         .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
