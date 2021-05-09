@@ -1,6 +1,6 @@
 ﻿@page "/requests"
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-
+@inject IRequestService requestService;
 <h1>Zgłoszenia</h1>
 
 @if (requests == null)
@@ -26,40 +26,37 @@ else
         <tbody>
             @foreach (var request in requests)
             {
-                <tr>
-                    <td>@request.Car.Brand</td>
-                    <td>@request.Car.Model</td>
-                    <td>@request.Car.Client</td>
-                    <td>@request.Description</td>
-                    <td>@request.Result</td>
-                    <td>@request.Status</td>
-                    <td>@request.Reqistered</td>
-                    <td>@request.FinishedOrCancelled</td>
-                    <td><button type="button" class="btn btn-primary" @onclick="()=>RealizeActivity(request)">Realizuj</button></td>
-                </tr>
+            <tr>
+            @if (request.Car != null)
+            {
+                <td>@request.Car.Brand</td>
+                <td>@request.Car.Model</td>
+                <td>@request.Car.Client</td> 
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+                <td></td>
+            }
+                <td>@request.Description</td>
+                <td>@request.Result</td>
+                <td>@request.Status</td>
+                <td>@request.Reqistered</td>
+                <td>@request.FinishedOrCancelled</td>
+                <td><button type="button" class="btn btn-primary" @onclick="() => RealizeActivity(request)">Realizuj</button></td>
+            </tr>
             }
         </tbody>
     </table>
 }
 
 @code {
-    public List<Request> requests = new List<Request>();
+    public IEnumerable<Request> requests = new List<Request>();
 
     protected override async Task OnInitializedAsync()
     {
-        requests = new List<Request> { new Request() {
-        Car = new Car
-        {
-            Brand = "Brand",
-            Model = "Model",
-            Client = new Client()
-        },
-        Description = "Description",
-        Result = "Result",
-        Status = Status.InProgress,
-        Reqistered = DateTime.Now,
-        FinishedOrCancelled = DateTime.Now
-        } }; // _activityService.GetAllActivities().ToList();
+        requests = await requestService.GetAllRequests();// new List<Request> { new Request() {
         await base.OnInitializedAsync();
     }
 

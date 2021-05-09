@@ -15,6 +15,14 @@ namespace Workshop.Services
     public class RequestService : ServiceBase<Request>, IRequestService
     {
         public RequestService(CarContext context) : base(context) { }
+
+        public async Task<IEnumerable<Request>> GetAllRequests()
+        {
+            return await Context.Set<Request>()
+                        .GetAllNotHidden()
+                        .ToListAsync();
+        }
+
         public async Task<Request> GetRequest(Guid id)
         {
             return await Context.Set<Request>()
