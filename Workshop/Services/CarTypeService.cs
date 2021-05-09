@@ -15,7 +15,7 @@ namespace Workshop.Services
     {
         public CarTypeService(CarContext context) : base(context) { }
 
-        public async Task<CarType> GetTypeByTypeName(string typeName)
+        public async Task<CarType> GetTypeByCode(string typeName)
         {
             return await Context
                 .Set<CarType>()

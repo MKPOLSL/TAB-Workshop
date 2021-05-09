@@ -9,6 +9,6 @@ namespace Workshop.Interfaces
 {
     public interface ICarTypeService : IServiceBase<CarType>
     {
-        Task<CarType> GetTypeByTypeName(string typeName);
+        Task<CarType> GetTypeByCode(string typeName);
     }
 }
