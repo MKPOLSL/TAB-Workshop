@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Workshop.Entities;
+using Workshop.Interfaces.Services.Base;
 
 namespace Workshop.Interfaces
 {
-    interface IActivityService
+    interface IActivityService : IServiceBase<Activity>
     {
-        IEnumerable<Activity> GetAllActivities();
         Task AddActivity();
     }
 }

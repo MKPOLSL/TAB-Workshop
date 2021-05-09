@@ -8,8 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Workshop.DataAccess;
 using Workshop.Interfaces;
-using Workshop.Interfaces.Repositories;
-using Workshop.Repositories;
 using Workshop.Services;
 
 namespace Workshop
@@ -41,12 +39,6 @@ namespace Workshop
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ICarTypeService, CarTypeService>();
-
-            //repositories
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<IClientRepository, ClientRepository>();
-            services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<ICarTypeRepository, CarTypeRepository>();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  

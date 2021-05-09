@@ -51,7 +51,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        clients = await clientService.GetClients();
+        clients = await clientService.GetAllAsync();
     }
 
     void AddNewClient() => navigationManager.NavigateTo("/addClient");
@@ -63,7 +63,8 @@ else
 
     public async Task DeleteClient(Client client)
     {
-        await clientService.DeleteClient(client);
+        clientService.Delete(client);
+        await clientService.SaveChangesAsync();
         navigationManager.NavigateTo("/clients", forceLoad: true);
     }
 

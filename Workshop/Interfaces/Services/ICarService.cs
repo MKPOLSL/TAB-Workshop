@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Workshop.Entities;
+using Workshop.Interfaces.Services.Base;
 
 namespace Workshop.Interfaces
 {
-    public interface ICarService
+    public interface ICarService : IServiceBase<Car>
     {
-        Task<IEnumerable<Car>> GetAllCars();
         Task<IEnumerable<Car>> GetAllCarsWithClients();
-        Task AddCar(Car car);
-        Task EditCar(Car car);
         Task<Car> GetCar(Guid id);
     }
 }

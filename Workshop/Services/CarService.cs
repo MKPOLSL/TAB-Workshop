@@ -6,38 +6,33 @@ using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
 using Workshop.Interfaces;
-using Workshop.Interfaces.Repositories;
+using Workshop.Services.Base;
+using Workshop.Utils;
 
 namespace Workshop.Services
 {
-    public class CarService : ICarService
+    public class CarService : ServiceBase<Car>, ICarService
     {
-        private readonly ICarRepository carRepository;
+        public CarService(CarContext context) : base(context) { }
 
-        public CarService(CarContext context, ICarRepository carRepository)
+        public async Task<Car> GetCar(Guid id)
         {
-            this.carRepository = carRepository;
+            return await Context
+                  .Set<Car>()
+                  .GetAllNotHidden()
+                  .Include(c => c.Client)
+                  .Include(c => c.CarType)
+                  .Where(c => c.Id == id)
+                  .FirstOrDefaultAsync();
         }
 
-        public async Task AddCar(Car car)
+        public async Task<IEnumerable<Car>> GetAllCarsWithClients()
         {
-            await carRepository.CreateAsync(car);
-            await carRepository.SaveChangesAsync();
+            return await Context
+                  .Set<Car>()
+                  .GetAllNotHidden()
+                  .Include(c => c.Client)
+                  .ToListAsync();
         }
-
-        public async Task EditCar(Car car)
-        {
-            carRepository.Update(car);
-            await carRepository.SaveChangesAsync();
-        }
-
-        public async Task<Car> GetCar(Guid Id)
-        {
-            return await carRepository.GetCar(Id);
-        }
-
-        public async Task<IEnumerable<Car>> GetAllCars() => await carRepository.GetAllAsync();
-
-        public async Task<IEnumerable<Car>> GetAllCarsWithClients() => await carRepository.GetAllWithClientsAsync();
     }
 }

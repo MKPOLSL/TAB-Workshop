@@ -50,7 +50,8 @@
 
     protected async Task CreateEmployee()
     {
-        await employeeService.AddEmployee(employee);
+        await employeeService.CreateAsync(employee);
+        await employeeService.SaveChangesAsync();
         navigationManager.NavigateTo("/");
     }
 

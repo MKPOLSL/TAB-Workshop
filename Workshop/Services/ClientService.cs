@@ -1,24 +1,20 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Dtos;
 using Workshop.Entities;
 using Workshop.Interfaces;
-using Workshop.Interfaces.Repositories;
+using Workshop.Services.Base;
+using Workshop.Utils;
 
 namespace Workshop.Services
 {
-    public class ClientService : IClientService
+    public class ClientService : ServiceBase<Client>, IClientService
     {
-        private readonly CarContext context;
-        private readonly IClientRepository clientRepository;
-
-        public ClientService(CarContext context, IClientRepository clientRepository)
-        {
-            this.context = context;
-            this.clientRepository = clientRepository;
-        }
+        public ClientService(CarContext context) : base(context) { }
 
         public async Task AddClient(ClientCreateDto client)
         {
@@ -29,26 +25,17 @@ namespace Workshop.Services
                 LastName = client.LastName,
                 PhoneNumber = client.PhoneNumber
             };
-            context
-                .Set<Client>()
-                .Add(newClient);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task <IEnumerable<Client>> GetClients()
-        {
-            return await clientRepository.GetAllAsync();
+            await CreateAsync(newClient);
         }
 
         public async Task<Client> GetClientById(Guid id)
         {
-            return await clientRepository.GetClient(id);
-        }
-
-        public async Task DeleteClient(Client client)
-        {
-            clientRepository.Delete(client);
-            await clientRepository.SaveChangesAsync();
+            return await Context
+                  .Set<Client>()
+                  .GetAllNotHidden()
+                  .Include(c => c.Cars)
+                  .Where(c => c.Id == id)
+                  .FirstOrDefaultAsync();
         }
     }
 }
