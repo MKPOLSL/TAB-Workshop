@@ -20,6 +20,10 @@ namespace Workshop.Services
         {
             return await Context.Set<Request>()
                         .GetAllNotHidden()
+                        .Include(e => e.Car)
+                        .ThenInclude(c => c.Client)
+                        .Include(e => e.Activities)
+                        .Include(e => e.Manager)
                         .ToListAsync();
         }
 

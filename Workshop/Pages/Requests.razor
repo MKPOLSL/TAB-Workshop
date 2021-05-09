@@ -26,27 +26,18 @@ else
         <tbody>
             @foreach (var request in requests)
             {
-            <tr>
-            @if (request.Car != null)
-            {
-                <td>@request.Car.Brand</td>
-                <td>@request.Car.Model</td>
-                <td>@request.Car.Client</td> 
-            }
-            else
-            {
-                <td></td>
-                <td></td>
-                <td></td>
-            }
-                <td>@request.Description</td>
-                <td>@request.Result</td>
-                <td>@request.Status</td>
-                <td>@request.Reqistered</td>
-                <td>@request.FinishedOrCancelled</td>
-                <td><button type="button" class="btn btn-primary" @onclick="() => RealizeActivity(request)">Realizuj</button></td>
-            </tr>
-            }
+                <tr>
+                    <td>@request.Car.Client.FirstName @request.Car.Client.LastName</td>
+                    <td>@request.Car.Brand</td>
+                    <td>@request.Car.Model</td>
+                    <td>@request.Description</td>
+                    <td>@request.Result</td>
+                    <td>@request.Status</td>
+                    <td>@request.Reqistered</td>
+                    <td>@request.FinishedOrCancelled</td>
+                    <td><button type="button" class="btn btn-primary" @onclick="() => RealizeActivity(request)">Realizuj</button></td>
+                </tr>
+             }
         </tbody>
     </table>
 }
