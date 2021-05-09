@@ -11,7 +11,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table  table-striped table-bordered"  style="text-align:center;">
         <thead>
             <tr>
                 <th>Numer Rejestracyjny</th>
@@ -32,9 +32,8 @@ else
                     <td>
                         <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
-                    </td>
-                    <td>
                         <button type="button" class="btn btn-primary" @onclick="() => AddCar(car)">Przypisz</button>
+
                     </td>
                 </tr>
             }

@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Workshop.Entities;
 using Workshop.Interfaces.Services.Base;
 
-namespace Workshop.Interfaces
+namespace Workshop.Interfaces.Services
 {
-    interface IActivityService : IServiceBase<Activity>
+    interface IRequestService : IServiceBase<Request>
     {
-        Task AddActivity();
-        Task<Activity> GetActivity(Guid id);
+        Task<Request> GetRequest(Guid id);
     }
 }

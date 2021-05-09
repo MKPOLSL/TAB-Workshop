@@ -1,7 +1,7 @@
-﻿@page "/requestList"
+﻿@page "/requests"
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-<h1>Klienci</h1>
+<h1>Zgłoszenia</h1>
 
 @if (requests == null)
 {
@@ -9,7 +9,7 @@
 }
 else
 {
-    <table id="activityTable" class="table table-striped table-bordered">
+    <table id="activityTable" class="table table-striped table-bordered"  style="text-align:center;">
         <thead>
             <tr>
                 <th>Marka pojazdu</th>
@@ -20,12 +20,13 @@ else
                 <th>Status</th>
                 <th>Data rejestracji zgłoszenia</th>
                 <th>Data zakończenia zgłoszenia</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var request in requests)
             {
-                <tr @onclick="() => ChangePage(request)">
+                <tr>
                     <td>@request.Car.Brand</td>
                     <td>@request.Car.Model</td>
                     <td>@request.Car.Client</td>
@@ -34,6 +35,7 @@ else
                     <td>@request.Status</td>
                     <td>@request.Reqistered</td>
                     <td>@request.FinishedOrCancelled</td>
+                    <td><button type="button" class="btn btn-primary" @onclick="()=>RealizeActivity(request)">Realizuj</button></td>
                 </tr>
             }
         </tbody>
@@ -61,8 +63,8 @@ else
         await base.OnInitializedAsync();
     }
 
-    protected void ChangePage(Request request)
+    protected void RealizeActivity(Request request)
     {
-        navigationManager.NavigateTo($"/realizeActivity");
+        navigationManager.NavigateTo($"/activities/{request.Id}");
     }
 }
