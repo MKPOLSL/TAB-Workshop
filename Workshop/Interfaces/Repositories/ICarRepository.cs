@@ -10,5 +10,6 @@ namespace Workshop.Interfaces.Repositories
     public interface ICarRepository : IRepositoryBase<Car>
     {
         Task<IEnumerable<Car>> GetAllWithClientsAsync();
+        Task<Car> GetCar(Guid id);
     }
 }

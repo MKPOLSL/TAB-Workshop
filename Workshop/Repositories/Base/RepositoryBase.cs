@@ -50,12 +50,11 @@ namespace Workshop.Repositories.Base
             await Context.SaveChangesAsync();
         }
 
-        public virtual Task UpdateAsync(T entity)
+        public virtual void Update(T entity)
         {
             Context
                  .Set<T>()
                  .Update(entity);
-            return Task.CompletedTask;
         }
     }
 }

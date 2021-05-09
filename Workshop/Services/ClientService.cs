@@ -35,9 +35,14 @@ namespace Workshop.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task <IEnumerable<Client>>GetClients()
+        public async Task <IEnumerable<Client>> GetClients()
         {
             return await clientRepository.GetAllAsync();
+        }
+
+        public async Task<Client> GetClientById(Guid id)
+        {
+            return await clientRepository.GetClient(id);
         }
 
         public async Task DeleteClient(Client client)

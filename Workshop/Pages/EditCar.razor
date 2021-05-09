@@ -1,17 +1,12 @@
-@page "/addCar/{ClientId:guid}"
+﻿@page "/editCar/{CarId:guid}"
 @inject ICarService carService
 @inject ICarTypeService carTypeService
-@inject IClientService clientService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @attribute [AuthorizeRoles(Role.Manager)]
 
 <h1>
-    Dodaj/Powiąż Samochód
+    Edytuj Samochód
 </h1>
-
-<h2>
-    Klient: @car.Client.FirstName @car.Client.LastName
-</h2>
 
 <div class="row">
     <div class="col-md-4">
@@ -32,9 +27,18 @@
                 <label for="Name" class="control-label">Numer rejestracyjny</label>
                 <input for="Name" class="form-control" @bind-value="@car.RegistrationNumber" />
             </div>
+            @*<div class="form-group">
+                <label for="Role" class="control-label">Typ</label>
+                <select for="Role" class="form-control" @bind="@carClientId">
+                    @foreach (Client client in clients)
+                    {
+                        <option value="@client.Id">@client.FirstName @client.LastName</option>
+                    }
+                </select>
+            </div>*@
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control"  @bind="@car.CarType.TypeName">
+                <select for="Role" class="form-control" @bind="@car.CarType.TypeName">
                     @foreach (CarType cartype in cartypes)
                     {
                         <option value="@cartype.TypeName">@cartype.TypeName</option>
@@ -42,7 +46,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary" @onclick="() => CreateCar(car)">Zapisz</button>
+                <button type="button" class="btn btn-primary" @onclick="() => DoEditCar(car)">Zapisz</button>
                 <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
             </div>
         </form>
@@ -52,27 +56,44 @@
 @code {
 
     [Parameter]
-    public Guid ClientId { get; set; }
+    public Guid CarId { get; set; }
     private Car car = new Car();
+    //private string carType;
+    //private System.Guid carClientId;
     private IEnumerable<CarType> cartypes = new List<CarType>();
+    private IEnumerable<Client> clients = new List<Client>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //car = carContext.Cars.Find(CarId);
+        car = await carService.GetCar(CarId);
+        cartypes = await carTypeService.GetAllTypes();
+        //carType = car.CarType.TypeName;
+        //carClientId = car.Client.Id;
+    }
 
     protected override async Task OnInitializedAsync()
     {
         car.CarType = new CarType();
-        car.Client = new Client();
     }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        cartypes = await carTypeService.GetAllTypes();
-        car.Client = await clientService.GetClientById(ClientId);
-    }
+    //private CarType carTypeMapper(string typeName)
+    //{
+    //    return cartypes.Where(c => c.TypeName.Equals(typeName)).FirstOrDefault();
+    //}
 
-    protected async Task CreateCar(Car car)
+    //private Client carClientMapper(System.Guid clientId)
+    //{
+    //    return clients.Where(c => c.Id.Equals(clientId)).FirstOrDefault();
+    //}
+
+    protected async Task DoEditCar(Car car)
     {
+        //car.CarType = carTypeMapper(carType);
+        //car.Client = carClientMapper(carClientId);
         car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
-        await carService.AddCar(car);
-        navigationManager.NavigateTo("/clients");
+        await carService.EditCar(car);
+        navigationManager.NavigateTo("/cars");
     }
 
     void Cancel() => navigationManager.NavigateTo("/clients");

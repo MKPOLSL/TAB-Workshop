@@ -9,7 +9,7 @@ namespace Workshop.Interfaces.Repositories.Base
         //Task<PAGINACJA<T>> FindAllPagedAsync(int? page, int? size);
         Task SaveChangesAsync();
         void CreateRange(IEnumerable<T> entities);
-        Task UpdateAsync(T entity);
+        void Update(T entity);
         Task CreateAsync(T entity);
         void Delete(T entity);
     }

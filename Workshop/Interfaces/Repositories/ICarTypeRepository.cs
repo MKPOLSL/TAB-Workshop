@@ -9,6 +9,6 @@ namespace Workshop.Interfaces.Repositories
 {
     public interface ICarTypeRepository : IRepositoryBase<CarType>
     {
-
+        Task<CarType> GetTypeByTypeName(string typeName);
     }
 }

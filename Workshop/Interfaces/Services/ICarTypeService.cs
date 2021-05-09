@@ -9,5 +9,6 @@ namespace Workshop.Interfaces
     public interface ICarTypeService
     {
         Task<IEnumerable<CarType>> GetAllTypes();
+        Task<CarType> GetTypeByTypeName(string typeName);
     }
 }
