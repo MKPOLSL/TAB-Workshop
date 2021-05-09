@@ -23,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Menadżer odpowiedzialny</label>
-                <select for="Name" class="form-control" @bind="request.Manager.Id">
+                <select for="Name" class="form-control" @bind="chosenManager.Id">
                     @foreach (var manager in managers)
                     {
                         <option value=@manager.Id>@(manager.FirstName + " " + manager.LastName)</option>
@@ -47,18 +47,19 @@
         Activities = new List<Activity>()
     };
     private IEnumerable<Employee> managers = new List<Employee>();
+    private Employee chosenManager = new Employee();
 
     protected override async Task OnInitializedAsync()
     {
         managers = await employeeService.GetAllManagers();
-        request.Manager = managers.First();
+        chosenManager = managers.First();
     }
 
     protected async Task CreateRequest(Request request)
     {
         this.request.Reqistered = DateTime.Now;
         this.request.Car = await carService.GetCarByRegistrationNumber(request.Car.RegistrationNumber);
-        this.request.Manager = await employeeService.GetById(request.Manager.Id);
+        this.request.Manager = await employeeService.GetById(chosenManager.Id);
         await requestService.CreateAsync(request);
         await requestService.SaveChangesAsync();
     }
