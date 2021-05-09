@@ -34,5 +34,16 @@ namespace Workshop.Services
                   .Include(c => c.Client)
                   .ToListAsync();
         }
+
+        public async Task<Car> GetCarByRegistrationNumber(string registrationNumber)
+        {
+            return await Context
+                  .Set<Car>()
+                  .GetAllNotHidden()
+                  .Include(c => c.Client)
+                  .Include(c => c.CarType)
+                  .Where(c => c.RegistrationNumber == registrationNumber)
+                  .FirstOrDefaultAsync();
+        }
     }
 }

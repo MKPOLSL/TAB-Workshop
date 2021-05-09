@@ -9,12 +9,12 @@
 }
 else
 {
-    <table id="activityTable" class="table table-striped table-bordered">
+    <table id="activityTable" class="table">
         <thead>
             <tr>
+                <th>Klient</th>
                 <th>Marka pojazdu</th>
                 <th>Model</th>
-                <th>Klient</th>
                 <th>Opis</th>
                 <th>Wynik</th>
                 <th>Status</th>
@@ -25,16 +25,16 @@ else
         <tbody>
             @foreach (var request in requests)
             {
-                <tr @onclick="() => ChangePage(request)">
-                    <td>@request.Car.Brand</td>
-                    <td>@request.Car.Model</td>
-                    <td>@request.Car.Client</td>
-                    <td>@request.Description</td>
-                    <td>@request.Result</td>
-                    <td>@request.Status</td>
-                    <td>@request.Reqistered</td>
-                    <td>@request.FinishedOrCancelled</td>
-                </tr>
+            <tr @onclick="() => ChangePage(request)">
+                <td>@request.Car.Client</td>
+                <td>@request.Car.Brand</td>
+                <td>@request.Car.Model</td>
+                <td>@request.Description</td>
+                <td>@request.Result</td>
+                <td>@request.Status</td>
+                <td>@request.Reqistered</td>
+                <td>@request.FinishedOrCancelled</td>
+            </tr>
             }
         </tbody>
     </table>

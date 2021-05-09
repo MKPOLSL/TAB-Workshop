@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Workshop.Enums;
 
 namespace Workshop.Entities
 {
+    [Table("Cars")]
     public class Car : HideableEntity
     {
         public Guid Id { get; set; }

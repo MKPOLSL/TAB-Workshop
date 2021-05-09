@@ -8,6 +8,7 @@ using Workshop.Enums;
 
 namespace Workshop.Entities
 {
+    [Table("Employees")]
     public class Employee : HideableEntity
     {
         public Guid Id { get; set; }

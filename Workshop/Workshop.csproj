@@ -7,6 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210503113604_fix-naming.cs" />
+    <Compile Remove="Migrations\20210503113604_fix-naming.Designer.cs" />
+    <Compile Remove="Migrations\20210509162850_add-activities.cs" />
+    <Compile Remove="Migrations\20210509162850_add-activities.Designer.cs" />
+    <Compile Remove="Migrations\20210509163124_activities.cs" />
+    <Compile Remove="Migrations\20210509163124_activities.Designer.cs" />
+    <Compile Remove="Migrations\20210509163552_add-nullable-fields.cs" />
+    <Compile Remove="Migrations\20210509163552_add-nullable-fields.Designer.cs" />
+    <Compile Remove="Migrations\20210509164752_one-to-many.cs" />
+    <Compile Remove="Migrations\20210509164752_one-to-many.Designer.cs" />
+    <Compile Remove="Migrations\20210509165122_remove-activities-from-employee.cs" />
+    <Compile Remove="Migrations\20210509165122_remove-activities-from-employee.Designer.cs" />
+    <Compile Remove="Migrations\20210509170013_remove-activities-from-employee-two-side.cs" />
+    <Compile Remove="Migrations\20210509170013_remove-activities-from-employee-two-side.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
     <PackageReference Include="Dapper" Version="2.0.30" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.14" />
