@@ -27,21 +27,12 @@
                 <label for="Name" class="control-label">Numer rejestracyjny</label>
                 <input for="Name" class="form-control" @bind-value="@car.RegistrationNumber" />
             </div>
-            @*<div class="form-group">
-                <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control" @bind="@carClientId">
-                    @foreach (Client client in clients)
-                    {
-                        <option value="@client.Id">@client.FirstName @client.LastName</option>
-                    }
-                </select>
-            </div>*@
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control" @bind="@car.CarType.TypeName">
+                <select for="Role" class="form-control" @bind="@chosenCarType.Code">
                     @foreach (CarType cartype in cartypes)
                     {
-                        <option value="@cartype.TypeName">@cartype.TypeName</option>
+                        <option value="@cartype.Code">@cartype.TypeName</option>
                     }
                 </select>
             </div>
@@ -58,40 +49,18 @@
     [Parameter]
     public Guid CarId { get; set; }
     private Car car = new Car();
-    //private string carType;
-    //private System.Guid carClientId;
+    private CarType chosenCarType = new CarType();
     private IEnumerable<CarType> cartypes = new List<CarType>();
-    private IEnumerable<Client> clients = new List<Client>();
 
     protected override async Task OnParametersSetAsync()
     {
-        //car = carContext.Cars.Find(CarId);
         car = await carService.GetCar(CarId);
         cartypes = await carTypeService.GetAllAsync();
-        //carType = car.CarType.TypeName;
-        //carClientId = car.Client.Id;
     }
-
-    protected override async Task OnInitializedAsync()
-    {
-        car.CarType = new CarType();
-    }
-
-    //private CarType carTypeMapper(string typeName)
-    //{
-    //    return cartypes.Where(c => c.TypeName.Equals(typeName)).FirstOrDefault();
-    //}
-
-    //private Client carClientMapper(System.Guid clientId)
-    //{
-    //    return clients.Where(c => c.Id.Equals(clientId)).FirstOrDefault();
-    //}
 
     protected async Task DoEditCar(Car car)
     {
-        //car.CarType = carTypeMapper(carType);
-        //car.Client = carClientMapper(carClientId);
-        car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
+        car.CarType = await carTypeService.GetTypeByCode(car.CarType.Code);
         carService.Update(car);
         await carService.SaveChangesAsync();
         navigationManager.NavigateTo("/cars");

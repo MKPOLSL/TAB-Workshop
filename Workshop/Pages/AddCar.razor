@@ -34,10 +34,10 @@
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control"  @bind="@chosenCarType.TypeName">
+                <select for="Role" class="form-control"  @bind="@chosenCarType.Code">
                     @foreach (CarType cartype in cartypes)
                     {
-                        <option value="@cartype.TypeName">@cartype.TypeName</option>
+                        <option value="@cartype.Code">@cartype.TypeName</option>
                     }
                 </select>
             </div>
@@ -60,10 +60,6 @@
     private IEnumerable<CarType> cartypes = new List<CarType>();
     private CarType chosenCarType = new CarType();
 
-    protected override async Task OnInitializedAsync()
-    {
-    }
-
     protected override async Task OnParametersSetAsync()
     {
         cartypes = await carTypeService.GetAllAsync();
@@ -73,7 +69,7 @@
 
     protected async Task CreateCar(Car car)
     {
-        car.CarType = await carTypeService.GetTypeByTypeName(chosenCarType.TypeName);
+        car.CarType = await carTypeService.GetTypeByCode(chosenCarType.Code);
         await carService.CreateAsync(car);
         await carService.SaveChangesAsync();
         navigationManager.NavigateTo("/clients");
