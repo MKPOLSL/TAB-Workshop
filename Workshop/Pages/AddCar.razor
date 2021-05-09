@@ -64,14 +64,15 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        cartypes = await carTypeService.GetAllTypes();
+        cartypes = await carTypeService.GetAllAsync();
         car.Client = await clientService.GetClientById(ClientId);
     }
 
     protected async Task CreateCar(Car car)
     {
         car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
-        await carService.AddCar(car);
+        await carService.CreateAsync(car);
+        await carService.SaveChangesAsync();
         navigationManager.NavigateTo("/clients");
     }
 

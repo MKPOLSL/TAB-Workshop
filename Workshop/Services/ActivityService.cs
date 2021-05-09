@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
 using Workshop.Interfaces;
+using Workshop.Services.Base;
 
 namespace Workshop.Services
 {
-    public class ActivityService : IActivityService
+    public class ActivityService : ServiceBase<Activity>, IActivityService
     {
-        private readonly CarContext context;
-
-        public ActivityService (CarContext context)
-        {
-            this.context = context;
-        }
+        public ActivityService(CarContext context) : base(context) { }
 
         public Task AddActivity()
         {
@@ -57,8 +52,5 @@ namespace Workshop.Services
             throw new NotImplementedException();
         }
         */
-
-        public IEnumerable<Activity> GetAllActivities() 
-            => context.Set<Activity>().ToList();
     }
 }

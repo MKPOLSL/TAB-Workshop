@@ -1,37 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Workshop.DataAccess;
-using Workshop.Dtos;
 using Workshop.Entities;
 using Workshop.Interfaces;
-using Workshop.Interfaces.Repositories;
+using Workshop.Services.Base;
 
 namespace Workshop.Services
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService : ServiceBase<Employee>, IEmployeeService
     {
-        private readonly CarContext context;
-        private readonly IEmployeeRepository employeeRepository;
-
-        public EmployeeService(CarContext context, IEmployeeRepository employeeRepository)
-        {
-            this.context = context;
-            this.employeeRepository = employeeRepository;
-        }
-
-        public async Task AddEmployee(Employee employee) 
-        {
-            context.Set<Employee>().Add(employee);
-            await context.SaveChangesAsync();
-        }
-
-        //public IEnumerable<Employee> GetAllUsers()
-        //=> context.Employees.ToList();      
-
-        public async Task<IEnumerable<Employee>> GetAllUsers() => await employeeRepository.GetAllAsync();
+        public EmployeeService(CarContext context) : base(context) { }
     }
 }

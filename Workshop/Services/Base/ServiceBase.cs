@@ -5,16 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
-using Workshop.Interfaces.Repositories.Base;
+using Workshop.Interfaces.Services.Base;
 using Workshop.Utils;
 
-namespace Workshop.Repositories.Base
+namespace Workshop.Services.Base
 {
-    public class RepositoryBase<T> : IRepositoryBase<T> where T : HideableEntity
+    public class ServiceBase<T> : IServiceBase<T> where T : HideableEntity
     {
         protected CarContext Context { get; set; }
 
-        protected RepositoryBase(CarContext context) => Context = context;
+        protected ServiceBase(CarContext context) => Context = context;
 
         public virtual async Task CreateAsync(T entity)
         {

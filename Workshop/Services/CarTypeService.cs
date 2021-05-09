@@ -6,29 +6,22 @@ using System.Threading.Tasks;
 using Workshop.DataAccess;
 using Workshop.Entities;
 using Workshop.Interfaces;
-using Workshop.Interfaces.Repositories;
+using Workshop.Services.Base;
+using Workshop.Utils;
 
 namespace Workshop.Services
 {
-    public class CarTypeService : ICarTypeService
+    public class CarTypeService : ServiceBase<CarType>, ICarTypeService
     {
-        private readonly CarContext context;
-        private readonly ICarTypeRepository carTypeRepository;
-
-        public CarTypeService(CarContext context, ICarTypeRepository carTypeRepository)
-        {
-            this.context = context;
-            this.carTypeRepository = carTypeRepository;
-        }
-
-        public async Task<IEnumerable<CarType>> GetAllTypes()
-        {
-            return await carTypeRepository.GetAllAsync();
-        }
+        public CarTypeService(CarContext context) : base(context) { }
 
         public async Task<CarType> GetTypeByTypeName(string typeName)
         {
-            return await carTypeRepository.GetTypeByTypeName(typeName);
+            return await Context
+                .Set<CarType>()
+                .GetAllNotHidden()
+                .Where(ct => ct.TypeName == typeName)
+                .FirstOrDefaultAsync();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Workshop.Interfaces.Repositories.Base
+namespace Workshop.Interfaces.Services.Base
 {
-    public interface IRepositoryBase<T>
+    public interface IServiceBase<T>
     {
         Task<IEnumerable<T>> GetAllAsync();
         //Task<PAGINACJA<T>> FindAllPagedAsync(int? page, int? size);

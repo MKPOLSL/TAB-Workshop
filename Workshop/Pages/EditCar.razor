@@ -67,7 +67,7 @@
     {
         //car = carContext.Cars.Find(CarId);
         car = await carService.GetCar(CarId);
-        cartypes = await carTypeService.GetAllTypes();
+        cartypes = await carTypeService.GetAllAsync();
         //carType = car.CarType.TypeName;
         //carClientId = car.Client.Id;
     }
@@ -92,7 +92,8 @@
         //car.CarType = carTypeMapper(carType);
         //car.Client = carClientMapper(carClientId);
         car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
-        await carService.EditCar(car);
+        carService.Update(car);
+        await carService.SaveChangesAsync();
         navigationManager.NavigateTo("/cars");
     }
 
