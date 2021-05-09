@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control"  @bind="@car.CarType.TypeName">
+                <select for="Role" class="form-control"  @bind="@chosenCarType.TypeName">
                     @foreach (CarType cartype in cartypes)
                     {
                         <option value="@cartype.TypeName">@cartype.TypeName</option>
@@ -50,27 +50,30 @@
 </div>
 
 @code {
-
     [Parameter]
     public Guid ClientId { get; set; }
-    private Car car = new Car();
+    private Car car = new Car
+    {
+        CarType = new CarType(),
+        Client = new Client()
+    };
     private IEnumerable<CarType> cartypes = new List<CarType>();
+    private CarType chosenCarType = new CarType();
 
     protected override async Task OnInitializedAsync()
     {
-        car.CarType = new CarType();
-        car.Client = new Client();
     }
 
     protected override async Task OnParametersSetAsync()
     {
         cartypes = await carTypeService.GetAllAsync();
         car.Client = await clientService.GetClientById(ClientId);
+        chosenCarType = cartypes.First();
     }
 
     protected async Task CreateCar(Car car)
     {
-        car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
+        car.CarType = await carTypeService.GetTypeByTypeName(chosenCarType.TypeName);
         await carService.CreateAsync(car);
         await carService.SaveChangesAsync();
         navigationManager.NavigateTo("/clients");

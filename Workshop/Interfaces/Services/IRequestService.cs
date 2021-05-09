@@ -7,7 +7,7 @@ using Workshop.Interfaces.Services.Base;
 
 namespace Workshop.Interfaces.Services
 {
-    interface IRequestService : IServiceBase<Request>
+    public interface IRequestService : IServiceBase<Request>
     {
         Task<Request> GetRequest(Guid id);
     }

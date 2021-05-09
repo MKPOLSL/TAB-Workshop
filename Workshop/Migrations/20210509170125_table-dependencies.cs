@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Workshop.Migrations
 {
-    public partial class fixnaming : Migration
+    public partial class tabledependencies : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,64 +36,81 @@ namespace Workshop.Migrations
                 table: "Request");
 
             migrationBuilder.DropPrimaryKey(
+                name: "PK_Request",
+                table: "Request");
+
+            migrationBuilder.DropPrimaryKey(
                 name: "PK_Employee",
                 table: "Employee");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Client",
+                table: "Client");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_CarType",
+                table: "CarType");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_ActivityType",
+                table: "ActivityType");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Activity",
+                table: "Activity");
 
             migrationBuilder.DropColumn(
                 name: "Reqistered",
                 table: "Activity");
 
             migrationBuilder.RenameTable(
+                name: "Request",
+                newName: "Requests");
+
+            migrationBuilder.RenameTable(
                 name: "Employee",
                 newName: "Employees");
 
-            migrationBuilder.AlterColumn<Guid>(
-                name: "ManagerId",
-                table: "Request",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldNullable: true);
+            migrationBuilder.RenameTable(
+                name: "Client",
+                newName: "Clients");
 
-            migrationBuilder.AlterColumn<Guid>(
-                name: "CarId",
-                table: "Request",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldNullable: true);
+            migrationBuilder.RenameTable(
+                name: "CarType",
+                newName: "CarTypes");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "PhoneNumber",
-                table: "Client",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+            migrationBuilder.RenameTable(
+                name: "ActivityType",
+                newName: "ActivityTypes");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastName",
-                table: "Client",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+            migrationBuilder.RenameTable(
+                name: "Activity",
+                newName: "Activities");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "FirstName",
-                table: "Client",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+            migrationBuilder.RenameIndex(
+                name: "IX_Request_ManagerId",
+                table: "Requests",
+                newName: "IX_Requests_ManagerId");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "TypeName",
-                table: "CarType",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+            migrationBuilder.RenameIndex(
+                name: "IX_Request_CarId",
+                table: "Requests",
+                newName: "IX_Requests_CarId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Activity_WorkerId",
+                table: "Activities",
+                newName: "IX_Activities_WorkerId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Activity_RequestId",
+                table: "Activities",
+                newName: "IX_Activities_RequestId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Activity_ActivityTypeCode",
+                table: "Activities",
+                newName: "IX_Activities_ActivityTypeCode");
 
             migrationBuilder.AlterColumn<string>(
                 name: "RegistrationNumber",
@@ -119,49 +136,28 @@ namespace Workshop.Migrations
                 oldType: "nvarchar(450)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "ActivityName",
-                table: "ActivityType",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
             migrationBuilder.AlterColumn<Guid>(
-                name: "WorkerId",
-                table: "Activity",
+                name: "ManagerId",
+                table: "Requests",
                 nullable: false,
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
                 oldNullable: true);
 
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "FinishedOrCancelled",
+                table: "Requests",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
             migrationBuilder.AlterColumn<Guid>(
-                name: "RequestId",
-                table: "Activity",
+                name: "CarId",
+                table: "Requests",
                 nullable: false,
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
                 oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ActivityTypeCode",
-                table: "Activity",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)",
-                oldNullable: true);
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "Registered",
-                table: "Activity",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<int>(
-                name: "SequenceNumber",
-                table: "Activity",
-                nullable: false,
-                defaultValue: 0);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Username",
@@ -195,9 +191,110 @@ namespace Workshop.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
+            migrationBuilder.AlterColumn<string>(
+                name: "PhoneNumber",
+                table: "Clients",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "LastName",
+                table: "Clients",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "FirstName",
+                table: "Clients",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "TypeName",
+                table: "CarTypes",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "ActivityName",
+                table: "ActivityTypes",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<Guid>(
+                name: "WorkerId",
+                table: "Activities",
+                nullable: false,
+                oldClrType: typeof(Guid),
+                oldType: "uniqueidentifier",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<Guid>(
+                name: "RequestId",
+                table: "Activities",
+                nullable: false,
+                oldClrType: typeof(Guid),
+                oldType: "uniqueidentifier",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "ActivityTypeCode",
+                table: "Activities",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(450)",
+                oldNullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "Registered",
+                table: "Activities",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<int>(
+                name: "SequenceNumber",
+                table: "Activities",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Requests",
+                table: "Requests",
+                column: "Id");
+
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Employees",
                 table: "Employees",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Clients",
+                table: "Clients",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_CarTypes",
+                table: "CarTypes",
+                column: "Code");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_ActivityTypes",
+                table: "ActivityTypes",
+                column: "Code");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Activities",
+                table: "Activities",
                 column: "Id");
 
             migrationBuilder.CreateIndex(
@@ -213,95 +310,98 @@ namespace Workshop.Migrations
                 unique: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Activity_ActivityType_ActivityTypeCode",
-                table: "Activity",
+                name: "FK_Activities_ActivityTypes_ActivityTypeCode",
+                table: "Activities",
                 column: "ActivityTypeCode",
-                principalTable: "ActivityType",
+                principalTable: "ActivityTypes",
                 principalColumn: "Code",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Activity_Request_RequestId",
-                table: "Activity",
+                name: "FK_Activities_Requests_RequestId",
+                table: "Activities",
                 column: "RequestId",
-                principalTable: "Request",
+                principalTable: "Requests",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Activity_Employees_WorkerId",
-                table: "Activity",
+                name: "FK_Activities_Employees_WorkerId",
+                table: "Activities",
                 column: "WorkerId",
                 principalTable: "Employees",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Cars_CarType_CarTypeCode",
+                name: "FK_Cars_CarTypes_CarTypeCode",
                 table: "Cars",
                 column: "CarTypeCode",
-                principalTable: "CarType",
+                principalTable: "CarTypes",
                 principalColumn: "Code",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Cars_Client_ClientId",
+                name: "FK_Cars_Clients_ClientId",
                 table: "Cars",
                 column: "ClientId",
-                principalTable: "Client",
+                principalTable: "Clients",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Request_Cars_CarId",
-                table: "Request",
+                name: "FK_Requests_Cars_CarId",
+                table: "Requests",
                 column: "CarId",
                 principalTable: "Cars",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Request_Employees_ManagerId",
-                table: "Request",
+                name: "FK_Requests_Employees_ManagerId",
+                table: "Requests",
                 column: "ManagerId",
                 principalTable: "Employees",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Activity_ActivityType_ActivityTypeCode",
-                table: "Activity");
+                name: "FK_Activities_ActivityTypes_ActivityTypeCode",
+                table: "Activities");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Activity_Request_RequestId",
-                table: "Activity");
+                name: "FK_Activities_Requests_RequestId",
+                table: "Activities");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Activity_Employees_WorkerId",
-                table: "Activity");
+                name: "FK_Activities_Employees_WorkerId",
+                table: "Activities");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Cars_CarType_CarTypeCode",
+                name: "FK_Cars_CarTypes_CarTypeCode",
                 table: "Cars");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Cars_Client_ClientId",
+                name: "FK_Cars_Clients_ClientId",
                 table: "Cars");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Request_Cars_CarId",
-                table: "Request");
+                name: "FK_Requests_Cars_CarId",
+                table: "Requests");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Request_Employees_ManagerId",
-                table: "Request");
+                name: "FK_Requests_Employees_ManagerId",
+                table: "Requests");
 
             migrationBuilder.DropIndex(
                 name: "IX_Cars_RegistrationNumber",
                 table: "Cars");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Requests",
+                table: "Requests");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Employees",
@@ -311,17 +411,99 @@ namespace Workshop.Migrations
                 name: "IX_Employees_Username",
                 table: "Employees");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Clients",
+                table: "Clients");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_CarTypes",
+                table: "CarTypes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_ActivityTypes",
+                table: "ActivityTypes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Activities",
+                table: "Activities");
+
             migrationBuilder.DropColumn(
                 name: "Registered",
-                table: "Activity");
+                table: "Activities");
 
             migrationBuilder.DropColumn(
                 name: "SequenceNumber",
-                table: "Activity");
+                table: "Activities");
+
+            migrationBuilder.RenameTable(
+                name: "Requests",
+                newName: "Request");
 
             migrationBuilder.RenameTable(
                 name: "Employees",
                 newName: "Employee");
+
+            migrationBuilder.RenameTable(
+                name: "Clients",
+                newName: "Client");
+
+            migrationBuilder.RenameTable(
+                name: "CarTypes",
+                newName: "CarType");
+
+            migrationBuilder.RenameTable(
+                name: "ActivityTypes",
+                newName: "ActivityType");
+
+            migrationBuilder.RenameTable(
+                name: "Activities",
+                newName: "Activity");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Requests_ManagerId",
+                table: "Request",
+                newName: "IX_Request_ManagerId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Requests_CarId",
+                table: "Request",
+                newName: "IX_Request_CarId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Activities_WorkerId",
+                table: "Activity",
+                newName: "IX_Activity_WorkerId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Activities_RequestId",
+                table: "Activity",
+                newName: "IX_Activity_RequestId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Activities_ActivityTypeCode",
+                table: "Activity",
+                newName: "IX_Activity_ActivityTypeCode");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "RegistrationNumber",
+                table: "Cars",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<Guid>(
+                name: "ClientId",
+                table: "Cars",
+                type: "uniqueidentifier",
+                nullable: true,
+                oldClrType: typeof(Guid));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "CarTypeCode",
+                table: "Cars",
+                type: "nvarchar(450)",
+                nullable: true,
+                oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<Guid>(
                 name: "ManagerId",
@@ -330,12 +512,48 @@ namespace Workshop.Migrations
                 nullable: true,
                 oldClrType: typeof(Guid));
 
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "FinishedOrCancelled",
+                table: "Request",
+                type: "datetime2",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldNullable: true);
+
             migrationBuilder.AlterColumn<Guid>(
                 name: "CarId",
                 table: "Request",
                 type: "uniqueidentifier",
                 nullable: true,
                 oldClrType: typeof(Guid));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Username",
+                table: "Employee",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Password",
+                table: "Employee",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "LastName",
+                table: "Employee",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "FirstName",
+                table: "Employee",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string));
 
             migrationBuilder.AlterColumn<string>(
                 name: "PhoneNumber",
@@ -362,27 +580,6 @@ namespace Workshop.Migrations
                 name: "TypeName",
                 table: "CarType",
                 type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "RegistrationNumber",
-                table: "Cars",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "ClientId",
-                table: "Cars",
-                type: "uniqueidentifier",
-                nullable: true,
-                oldClrType: typeof(Guid));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "CarTypeCode",
-                table: "Cars",
-                type: "nvarchar(450)",
                 nullable: true,
                 oldClrType: typeof(string));
 
@@ -421,37 +618,34 @@ namespace Workshop.Migrations
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Username",
-                table: "Employee",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Password",
-                table: "Employee",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LastName",
-                table: "Employee",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "FirstName",
-                table: "Employee",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string));
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Request",
+                table: "Request",
+                column: "Id");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Employee",
                 table: "Employee",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Client",
+                table: "Client",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_CarType",
+                table: "CarType",
+                column: "Code");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_ActivityType",
+                table: "ActivityType",
+                column: "Code");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Activity",
+                table: "Activity",
                 column: "Id");
 
             migrationBuilder.AddForeignKey(

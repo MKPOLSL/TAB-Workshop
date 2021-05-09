@@ -25,6 +25,16 @@ namespace Workshop.DataAccess
             modelBuilder.Entity<Car>()
                 .HasIndex(b => b.RegistrationNumber)
                 .IsUnique();
+
+            modelBuilder.Entity<Request>()
+                .HasOne(r => r.Manager)
+                .WithMany(e => e.Requests)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.Requests)
+                .WithOne(r => r.Manager)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
     }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Workshop.Enums;
 
 namespace Workshop.Entities
 {
+    [Table("Requests")]
     public class Request : HideableEntity
     {
         public Guid Id { get; set; }
@@ -15,7 +17,7 @@ namespace Workshop.Entities
         [Required]
         public Status Status { get; set; }
         public DateTime Reqistered { get; set; }
-        public DateTime FinishedOrCancelled { get; set; }
+        public DateTime? FinishedOrCancelled { get; set; }
 
         [Required]
         public virtual Car Car { get; set; }
