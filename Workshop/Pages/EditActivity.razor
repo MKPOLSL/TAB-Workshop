@@ -42,12 +42,12 @@
                 </div>*@
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control" @bind="@activity.ActivityType.ActivityName">
+                @*<select for="Role" class="form-control" @bind="@activity.ActivityType.ActivityName">
                     @foreach (ActivityType activityType in activityTypes)
                     {
                         <option value="@activityType.ActivityName">@activityType.ActivityName</option>
                     }
-                </select>
+                </select>*@
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-primary" @onclick="() => DoEditActivity(activity)">Zapisz</button>
