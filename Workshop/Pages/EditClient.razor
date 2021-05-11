@@ -1,0 +1,51 @@
+﻿@page "/editClient/{ClientId:guid}"
+@inject IClientService clientService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
+<h1>
+    Dodaj Klienta
+</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">Imię</label>
+                <input for="Name" class="form-control" @bind-value="@client.FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Nazwisko</label>
+                <input for="Name" class="form-control" @bind-value="@client.LastName" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Numer Telefonu</label>
+                <input for="Name" class="form-control" @bind-value="@client.PhoneNumber" />
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" @onclick="() => DoEditClient()">Zapisz</button>
+                <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid ClientId { get; set; }
+    Client client = new Client();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        client = await clientService.GetClientById(ClientId);
+    }
+
+    protected async Task DoEditClient()
+    {
+        clientService.Update(client);
+        await clientService.SaveChangesAsync();
+        navigationManager.NavigateTo("/clients");
+    }
+
+    void Cancel() => navigationManager.NavigateTo("/clients");
+}
