@@ -32,7 +32,7 @@ else
                     <td>@client.LastName</td>
                     <td>@client.PhoneNumber</td>
                     <td>
-                        <button type="button" class="btn btn-warning" @onclick="() => EditClient()">Edytuj</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => EditClient(client)">Edytuj</button>
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteClient(client)">Usuń</button>
                     </td>
                     <td>
@@ -56,9 +56,9 @@ else
 
     void AddNewClient() => navigationManager.NavigateTo("/addClient");
 
-    void EditClient()
+    void EditClient(Client client)
     {
-
+        navigationManager.NavigateTo($"/editClient/{client.Id}");
     }
 
     public async Task DeleteClient(Client client)
