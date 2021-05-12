@@ -15,12 +15,12 @@ namespace Workshop.Services
     {
         public CarTypeService(CarContext context) : base(context) { }
 
-        public async Task<CarType> GetTypeByCode(string typeName)
+        public async Task<CarType> GetTypeByCode(string code)
         {
             return await Context
                 .Set<CarType>()
                 .GetAllNotHidden()
-                .Where(ct => ct.TypeName == typeName)
+                .Where(ct => ct.Code == code)
                 .FirstOrDefaultAsync();
         }
     }
