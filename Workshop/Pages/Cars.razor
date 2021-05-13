@@ -1,6 +1,8 @@
 ﻿@page "/cars"
 @inject ICarService carService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IEmployeeService employeeService
 @attribute [AuthorizeRoles(Role.Manager)]
 
 <h1>Samochody</h1>
@@ -34,6 +36,9 @@ else
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
                     </td>
                     <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => AddRequest(car)">Dodaj zgłoszenie</button>
+                    </td>
+                    <td>
                         <button type="button" class="btn btn-primary" @onclick="() => AddCar(car)">Przypisz</button>
                     </td>
                 </tr>
@@ -52,20 +57,25 @@ else
 
     }
 
-    void EditCar(Car car)
+    private void EditCar(Car car)
     {
         navigationManager.NavigateTo($"/editCar/{car.Id}");
     }
 
-    public async Task DeleteCar(Car car)
+    private async Task DeleteCar(Car car)
     {
         //await carService.DeleteCar(car);
         navigationManager.NavigateTo("/cars", forceLoad: true);
     }
 
-    void AddCar(Car car)
+    private void AddCar(Car car)
     {
         navigationManager.NavigateTo($"/addCar/{car.Client.Id}");
+    }
+
+    private void AddRequest(Car car)
+    {
+        navigationManager.NavigateTo($"/AddRequest/{car.Id}");
     }
 
 
