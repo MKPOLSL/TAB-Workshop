@@ -11,6 +11,7 @@ namespace Workshop.Interfaces
     {
         Task<IEnumerable<Employee>> GetAllManagers();
         Task<Employee> GetById(Guid id);
-        Task<Employee> GetByUsername(string username);
+        Task<Employee> GetByUsername(Guid username);
+        Task<Employee> GetUserFromLocalStorage();
     }
 }

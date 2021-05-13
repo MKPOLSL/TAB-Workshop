@@ -1,4 +1,4 @@
-﻿@page "/addRequest/{CarId:guid}/{ManagerId:guid}"
+﻿@page "/addRequest/{CarId:guid}"
 @inject ICarService carService
 @inject IEmployeeService employeeService
 @inject IClientService clientService
@@ -43,8 +43,7 @@ else
 @code {
     [Parameter]
     public Guid CarId { get; set; }
-    [Parameter]
-    public Guid ManagerId { get; set; }
+
     private Request request = new Request
     {
         Car = new Car(),
@@ -57,11 +56,16 @@ else
     private Employee chosenManager = new Employee();
     private Car chosenCar = new Car();
 
+    protected override async Task OnParametersSetAsync()
+    {
+        var user = await employeeService.GetUserFromLocalStorage();
+        chosenManager = await employeeService.GetById(user.Id);
+    }
+
     protected override async Task OnInitializedAsync()
     {
         managers = await employeeService.GetAllManagers();
         cars = await carService.GetAllCarsWithClients();
-        chosenManager = managers.Where(m => m.Id.Equals(ManagerId)).FirstOrDefault();
         chosenCar = cars.Where(c => c.Id.Equals(CarId)).FirstOrDefault();
     }
 

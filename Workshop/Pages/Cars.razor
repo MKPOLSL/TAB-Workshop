@@ -57,29 +57,25 @@ else
 
     }
 
-    void EditCar(Car car)
+    private void EditCar(Car car)
     {
         navigationManager.NavigateTo($"/editCar/{car.Id}");
     }
 
-    public async Task DeleteCar(Car car)
+    private async Task DeleteCar(Car car)
     {
         //await carService.DeleteCar(car);
         navigationManager.NavigateTo("/cars", forceLoad: true);
     }
 
-    void AddCar(Car car)
+    private void AddCar(Car car)
     {
         navigationManager.NavigateTo($"/addCar/{car.Client.Id}");
     }
 
-    private async Task AddRequest(Car car)
+    private void AddRequest(Car car)
     {
-        AuthenticationState temp = await
-        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
-        String username = temp.User.Identity.Name;
-        Employee currentManager = await employeeService.GetByUsername(username);
-        navigationManager.NavigateTo($"/AddRequest/{car.Id}/{currentManager.Id}");
+        navigationManager.NavigateTo($"/AddRequest/{car.Id}");
     }
 
 
