@@ -30,9 +30,13 @@ namespace Workshop.Services
         public async Task<Request> GetRequest(Guid id)
         {
             return await Context.Set<Request>()
-            .GetAllNotHidden()
-            .Where(e => e.Id == id)
-            .FirstOrDefaultAsync();
+                        .GetAllNotHidden()
+                        .Include(e => e.Car)
+                        .ThenInclude(c => c.Client)
+                        .Include(e => e.Activities)
+                        .Include(e => e.Manager)
+                        .Where(e => e.Id == id)
+                        .FirstOrDefaultAsync();
         }
     }
 }

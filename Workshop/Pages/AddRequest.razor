@@ -21,7 +21,8 @@ else
         <form>
             <div class="form-group">
                 <label for="Name" class="control-label">Opis Zgłoszenia</label>
-                <input for="Name" class="form-control" @bind-value="@request.Description" />
+                <textarea @bind="request.Description" @bind:event="oninput" class="form-control" id="Description" rows="6" maxlength="300" style="resize:none"></textarea>
+                <label>Pozostało: @((300 - request.Description.Length)) znaków.</label>
             </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Numer Rejestracyjny</label>
@@ -48,7 +49,8 @@ else
     {
         Car = new Car(),
         Manager = new Employee(),
-        Activities = new List<Activity>()
+        Activities = new List<Activity>(),
+        Description = ""
 
     };
     private IEnumerable<Employee> managers;
