@@ -12,7 +12,8 @@ namespace Workshop.DataAccess
         public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<CarType> CarTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
-        public DbSet<Request> Requests { get; set; }
+        public DbSet<Request> Requests { get; set; }        
+        public Employee currentUser { get; set; }
 
         public CarContext(DbContextOptions<CarContext> options) : base(options) { }
                 

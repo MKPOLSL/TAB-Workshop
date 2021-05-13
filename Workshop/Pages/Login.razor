@@ -9,6 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject IUserAuthorizationService authorizationService
 @inject ILogger<Login> Logger
+@inject CarContext carContext
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
 
 <center>
@@ -75,6 +76,7 @@
         if (user != null)
         {
             ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user);
+            carContext.currentUser = user;
             NavigationManager.NavigateTo("/");
         }
         else
