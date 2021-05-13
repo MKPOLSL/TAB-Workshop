@@ -2,7 +2,7 @@
 @inject ICarService carService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject CarContext carContext
+@inject IEmployeeService employeeService
 @attribute [AuthorizeRoles(Role.Manager)]
 
 <h1>Samochody</h1>
@@ -75,7 +75,11 @@ else
 
     private async Task AddRequest(Car car)
     {
-        navigationManager.NavigateTo($"/AddRequest/{car.Id}/{carContext.currentUser.Id}");
+        AuthenticationState temp = await
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
+        String username = temp.User.Identity.Name;
+        Employee currentManager = await employeeService.GetByUsername(username);
+        navigationManager.NavigateTo($"/AddRequest/{car.Id}/{currentManager.Id}");
     }
 
 

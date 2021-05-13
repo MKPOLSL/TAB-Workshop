@@ -33,5 +33,13 @@ namespace Workshop.Services
                 .Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
         }
+        public async Task<Employee> GetByUsername(String username)
+        {
+            return await Context
+                .Set<Employee>()
+                .GetAllNotHidden()
+                .Where(e => e.Username.Equals(username))
+                .FirstOrDefaultAsync();
+        }
     }
 }

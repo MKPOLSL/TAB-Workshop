@@ -10,12 +10,12 @@
     Rejestruj Zgłoszenie
 </h1>
 
-@*@if (managers == null)
-    {
-        <div class="spinner"></div>
-    }
-    else
-    {*@
+@if (managers == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
 <div class="row">
     <div class="col-md-4">
         <form>
@@ -38,7 +38,7 @@
         </form>
     </div>
 </div>
-@*}*@
+}
 
 @code {
     [Parameter]
@@ -72,6 +72,7 @@
         this.request.Manager = await employeeService.GetById(chosenManager.Id);
         await requestService.CreateAsync(request);
         await requestService.SaveChangesAsync();
+        navigationManager.NavigateTo("/requests");
     }
 
     void Cancel() => navigationManager.NavigateTo("/clients");
