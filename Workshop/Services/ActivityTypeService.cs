@@ -9,21 +9,18 @@ using Workshop.Interfaces;
 using Workshop.Services.Base;
 using Workshop.Utils;
 
-
 namespace Workshop.Services
 {
-    public class ActivityService : ServiceBase<Activity>, IActivityService
+    public class ActivityTypeService : ServiceBase<ActivityType>, IActivityTypeService
     {
-        public ActivityService(CarContext context) : base(context) { }
+        public ActivityTypeService(CarContext context) : base(context) { }
 
-        public async Task<Activity> GetActivity(Guid id)
+        public async Task<ActivityType> GetActivityTypeByCode(string code)
         {
             return await Context
-                .Set<Activity>()
+                .Set<ActivityType>()
                 .GetAllNotHidden()
-                .Include(a => a.Worker)
-                .Include(a => a.ActivityType)
-                .Where(a => a.Id == id)
+                .Where(a => a.Code == code)
                 .FirstOrDefaultAsync();
         }
     }
