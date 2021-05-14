@@ -124,8 +124,8 @@
                 activities[i].Request = request;
                 await activityService.CreateAsync(activities[i]);
             }
-            await activityService.SaveChangesAsync();
         }
+        await activityService.SaveChangesAsync();
     }
 
     private void MoveUp(Activity activity)
