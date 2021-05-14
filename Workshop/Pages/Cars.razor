@@ -9,46 +9,51 @@
 
 @if (cars == null)
 {
-    <div class="spinner"></div>
+<div class="spinner"></div> }
+else
+{
+
+
+@if (cars.Any())
+{
+<table class="table  table-striped table-bordered" style="text-align:center;">
+    <thead>
+        <tr>
+            <th>Numer Rejestracyjny</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Klient</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in cars)
+        {
+    <tr>
+        <td>@car.RegistrationNumber</td>
+        <td>@car.Brand</td>
+        <td>@car.Model</td>
+        <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
+        <td>
+            <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
+            <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
+            <button type="button" class="btn btn-primary" @onclick="() => AddCar(car)">Przypisz</button>
+            <button type="button" class="btn btn-primary" @onclick="() => AddRequest(car)">Dodaj zgłoszenie</button>
+        </td>
+    </tr>
+    }
+    </tbody>
+</table> 
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Numer Rejestracyjny</th>
-                <th>Marka</th>
-                <th>Model</th>
-                <th>Klient</th>
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var car in cars)
-            {
-                <tr>
-                    <td>@car.RegistrationNumber</td>
-                    <td>@car.Brand</td>
-                    <td>@car.Model</td>
-                    <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
-                    <td>
-                        <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddRequest(car)">Dodaj zgłoszenie</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddCar(car)">Przypisz</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div style="padding-top: 25px">
+    <h2>Nie ma jeszcze żadnych samochodów</h2>
+</div>
+}
 }
 
-@code {
-    private IEnumerable<Car> cars;
+@code { private IEnumerable<Car> cars;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,7 +81,4 @@ else
     private void AddRequest(Car car)
     {
         navigationManager.NavigateTo($"/AddRequest/{car.Id}");
-    }
-
-
-}
+    } }

@@ -39,6 +39,7 @@ namespace Workshop
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IRequestService, RequestService>();
             services.AddScoped<ICarTypeService, CarTypeService>();
             services.AddScoped<IRequestService, RequestService>();
 

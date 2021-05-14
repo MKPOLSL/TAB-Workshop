@@ -10,5 +10,6 @@ namespace Workshop.Interfaces
     interface IActivityService : IServiceBase<Activity>
     {
         Task AddActivity();
+        Task<Activity> GetActivity(Guid id);
     }
 }
