@@ -26,7 +26,7 @@
                 <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
             </div>
             <div class="form-group">
-                <select for="activityType" class="form-control" @bind="activity.ActivityType.Code" required>
+                <select for="activityType" class="form-control" @bind="activity.ActivityType.Code">
                     @foreach (ActivityType activityType in activityTypes)
                     {
                         <option value="@activityType.Code">@activityType.ActivityName</option>
@@ -57,6 +57,13 @@
         request = await requestService.GetRequest(RequestId);
         activityTypes = await activityTypeService.GetAllAsync();
         activities = request.Activities.ToList();
+        foreach(var activity in activities) 
+        { 
+            activity.ActivityType = new ActivityType()
+            {
+                Code = activity.ActivityType.Code
+            };
+        }
         activities.Add(new Activity()
         {
             ActivityType = new ActivityType()
