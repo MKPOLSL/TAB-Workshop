@@ -42,6 +42,7 @@ namespace Workshop
             services.AddScoped<IRequestService, RequestService>();
             services.AddScoped<ICarTypeService, CarTypeService>();
             services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped<IActivityTypeService, ActivityTypeService>();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  

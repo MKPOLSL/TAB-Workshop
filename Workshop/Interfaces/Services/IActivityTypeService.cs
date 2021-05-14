@@ -7,8 +7,8 @@ using Workshop.Interfaces.Services.Base;
 
 namespace Workshop.Interfaces
 {
-    interface IActivityService : IServiceBase<Activity>
+    interface IActivityTypeService : IServiceBase<ActivityType>
     {
-        Task<Activity> GetActivity(Guid id);
+        Task<ActivityType> GetActivityTypeByCode(string code);
     }
 }

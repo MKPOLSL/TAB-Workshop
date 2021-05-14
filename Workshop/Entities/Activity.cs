@@ -21,8 +21,6 @@ namespace Workshop.Entities
         public ActivityType ActivityType { get; set; }
         [Required]
         public virtual Request Request { get; set; }
-        [Required]
         public virtual Employee Worker { get; set; }
-
     }
 }

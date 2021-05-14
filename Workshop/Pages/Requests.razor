@@ -1,14 +1,14 @@
 ﻿@page "/requests"
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-@inject IRequestService requestService;
+@inject IRequestService requestService
+@attribute [AuthorizeRoles(Role.Manager)]
 <h1>Zgłoszenia</h1>
 
 @if (requests == null)
 {
 <div class="spinner"></div> 
 }            
-else {
-@if (requests.Any())
+else if (requests.Any())
 {
 <table id="activityTable" class="table table-striped table-bordered" style="text-align:center;">
     <thead>
@@ -18,9 +18,9 @@ else {
             <th>Model</th>
             <th>Opis</th>
             <th>Wynik</th>
-            <th>Status</th>
             <th>Data rejestracji zgłoszenia</th>
             <th>Data zakończenia zgłoszenia</th>
+            <th>Status</th>
             <th>Akcje</th>
         </tr>
     </thead>
@@ -33,12 +33,12 @@ else {
             <td>@request.Car.Model</td>
             <td>@request.Description</td>
             <td>@request.Result</td>
-            <td>@request.Status</td>
             <td>@request.Reqistered</td>
             <td>@request.FinishedOrCancelled</td>
-            <td><button type="button" class="btn btn-primary" @onclick="() => RealizeActivity(request)">Realizuj</button></td>
+            <td><span class="badge badge-@GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
+            <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
         </tr>
-        }
+        } 
     </tbody>
 </table> 
 }
@@ -47,9 +47,9 @@ else {
     <h2>Nie ma jeszcze żadnych klientów</h2>
 </div>
 }
-}
 
-@code { public IEnumerable<Request> requests = new List<Request>();
+@code { 
+    public IEnumerable<Request> requests;
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,7 +57,17 @@ else {
         await base.OnInitializedAsync();
     }
 
-    protected void RealizeActivity(Request request)
+    private string GetBadge(Status status) => status switch
     {
-        navigationManager.NavigateTo($"/activities/{request.Id}");
-    } }
+        Status.Pending => "secondary",
+        Status.InProgress => "warning",
+        Status.Finished => "success",
+        Status.Canceled => "danger",
+        _ => "dark"
+    };
+
+    protected void DecomposeActivity(Request request)
+    {
+        navigationManager.NavigateTo($"/addActivities/{request.Id}");
+    }
+}
