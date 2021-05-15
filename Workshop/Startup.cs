@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.Modal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,7 @@ namespace Workshop
             services.AddScoped<ICarTypeService, CarTypeService>();
             services.AddScoped<IRequestService, RequestService>();
             services.AddScoped<IActivityTypeService, ActivityTypeService>();
+            services.AddBlazoredModal();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //Register dapper in scope  
