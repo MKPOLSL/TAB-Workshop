@@ -126,6 +126,7 @@
             }
         }
         await activityService.SaveChangesAsync();
+        navigationManager.NavigateTo($"/requests");
     }
 
     private void MoveUp(Activity activity)

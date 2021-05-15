@@ -36,7 +36,14 @@ else if (requests.Any())
             <td>@request.Reqistered</td>
             <td>@request.FinishedOrCancelled</td>
             <td><span class="badge badge-@GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
-            <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
+            @if (request.Activities.Any())
+            {
+                <td><button type="button" class="btn btn-warning" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button></td>
+            }
+            else
+            {
+                <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
+            }
         </tr>
         } 
     </tbody>
