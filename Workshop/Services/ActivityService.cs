@@ -24,8 +24,22 @@ namespace Workshop.Services
                 .Include(a => a.Worker)
                 .Include(a => a.ActivityType)
                 .Include(a => a.Request)
+                .ThenInclude(r => r.Car)
                 .Where(a => a.Id == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public Activity GetActivitySync(Guid id)
+        {
+            return Context
+                .Set<Activity>()
+                .GetAllNotHidden()
+                .Include(a => a.Worker)
+                .Include(a => a.ActivityType)
+                .Include(a => a.Request)
+                .ThenInclude(r => r.Car)
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
         }
 
         public async Task<IEnumerable<Activity>> GetWorkerActivities(Guid workerId)
@@ -36,6 +50,7 @@ namespace Workshop.Services
                 .Include(a => a.Worker)
                 .Include(a => a.ActivityType)
                 .Include(a => a.Request)
+                .ThenInclude(r => r.Car)
                 .Where(a => a.Worker.Id == workerId)
                 .ToListAsync();
         }
