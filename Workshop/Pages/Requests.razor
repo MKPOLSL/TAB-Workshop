@@ -1,6 +1,8 @@
 ﻿@page "/requests"
+@page "/requests/{WorkerId:guid}"
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IRequestService requestService
+@inject IEmployeeService employeeService
 @attribute [AuthorizeRoles(Role.Manager)]
 <h1>Zgłoszenia</h1>
 
@@ -36,13 +38,20 @@ else if (requests.Any())
             <td>@request.Reqistered</td>
             <td>@request.FinishedOrCancelled</td>
             <td><span class="badge badge-@GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
-            @if (request.Activities.Any())
+            @if (WorkerId == Guid.Empty)
             {
-                <td><button type="button" class="btn btn-warning" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button></td>
+                @if (request.Activities.Any())
+                {
+                    <td><button type="button" class="btn btn-warning" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button></td>
+                }
+                else
+                {
+                    <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
+                }
             }
             else
             {
-                <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
+                <td><button type="button" class="btn btn-primary" @onclick="() => ShowRequests(request)">Przypisz czynności</button></td>
             }
         </tr>
         } 
@@ -51,16 +60,21 @@ else if (requests.Any())
 }
 else {
 <div style="padding-top: 25px">
-    <h2>Nie ma jeszcze żadnych klientów</h2>
+    <h2>Nie masz żadnych zgłoszeń</h2>
 </div>
 }
 
 @code { 
+    [Parameter]
+    public Guid WorkerId { get; set; }
     public IEnumerable<Request> requests;
+    private Employee manager;
 
     protected override async Task OnInitializedAsync()
     {
-        requests = await requestService.GetAllRequests();// new List<Request> { new Request() {
+        requests = await requestService.GetAllRequests();
+        manager = await employeeService.GetUserFromLocalStorage();
+        requests = requests.Where(r => r.Manager == manager);
         await base.OnInitializedAsync();
     }
 
@@ -76,5 +90,10 @@ else {
     protected void DecomposeActivity(Request request)
     {
         navigationManager.NavigateTo($"/addActivities/{request.Id}");
+    }
+
+    protected void ShowRequests(Request request)
+    {
+        navigationManager.NavigateTo($"/assignActivities/{WorkerId}/{request.Id}");
     }
 }
