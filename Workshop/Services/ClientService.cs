@@ -16,18 +16,6 @@ namespace Workshop.Services
     {
         public ClientService(CarContext context) : base(context) { }
 
-        public async Task AddClient(ClientCreateDto client)
-        {
-            var newClient = new Client
-            {
-                Id = Guid.NewGuid(),
-                FirstName = client.FirstName,
-                LastName = client.LastName,
-                PhoneNumber = client.PhoneNumber
-            };
-            await CreateAsync(newClient);
-        }
-
         public async Task<Client> GetClientById(Guid id)
         {
             return await Context

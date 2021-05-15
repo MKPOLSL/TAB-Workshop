@@ -9,7 +9,9 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form>
+        <EditForm Model="@client" OnValidSubmit="@CreateClient">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
             <div class="form-group">
                 <label for="Name" class="control-label">Imię</label>
                 <input for="Name" class="form-control" @bind-value="@client.FirstName" />
@@ -23,20 +25,20 @@
                 <input for="Name" class="form-control" @bind-value="@client.PhoneNumber" />
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary" @onclick="() => CreateClient()">Zapisz</button>
+                <button type="submit" class="btn btn-primary" >Zapisz</button>
                 <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
             </div>
-        </form>
+        </EditForm>
     </div>
 </div>
 
 @code {
 
-    ClientCreateDto client = new ClientCreateDto();
+    Client client = new Client();
 
     protected async Task CreateClient()
     {
-        await clientService.AddClient(client);
+        await clientService.CreateAsync(client);
         await clientService.SaveChangesAsync();
         navigationManager.NavigateTo("/clients");
     }

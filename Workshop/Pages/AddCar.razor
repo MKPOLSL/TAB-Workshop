@@ -15,7 +15,9 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form>
+        <EditForm Model="@car" OnValidSubmit="@CreateCar">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
             <div class="form-group">
                 <label for="Name" class="control-label">Marka</label>
                 <input for="Name" class="form-control" @bind-value="@car.Brand" />
@@ -34,7 +36,7 @@
             </div>
             <div class="form-group">
                 <label for="Role" class="control-label">Typ</label>
-                <select for="Role" class="form-control"  @bind="@chosenCarType.Code">
+                <select for="Role" class="form-control" @bind="@chosenCarType.Code">
                     @foreach (CarType cartype in cartypes)
                     {
                         <option value="@cartype.Code">@cartype.TypeName</option>
@@ -42,10 +44,10 @@
                 </select>
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary" @onclick="() => CreateCar(car)">Zapisz</button>
+                <button type="submit" class="btn btn-primary" >Zapisz</button>
                 <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
             </div>
-        </form>
+        </EditForm>
     </div>
 </div>
 
@@ -67,7 +69,7 @@
         chosenCarType = cartypes.First();
     }
 
-    protected async Task CreateCar(Car car)
+    protected async Task CreateCar()
     {
         car.CarType = await carTypeService.GetTypeByCode(chosenCarType.Code);
         await carService.CreateAsync(car);
