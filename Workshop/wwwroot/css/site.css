@@ -169,3 +169,8 @@ app {
         transform: rotate(360deg)
     }
 }
+
+.checkbox-assign {
+    width: 30px; 
+    height: 30px;
+}

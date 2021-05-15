@@ -1,0 +1,85 @@
+﻿@page "/assignActivities/{WorkerId:guid}/{RequestId:guid}"
+@inject IActivityService activityService
+@inject IRequestService requestService
+@inject IEmployeeService employeeService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
+<h3>Przypisz czynności</h3>
+
+<div class="row" style="padding-top: 20px">
+    <div class="col-md-4">
+        <button type="button" class="btn btn-primary" @onclick="() => Assign()">Zapisz</button>
+    </div>
+</div>
+
+@if (request == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <table class="table  table-striped table-bordered" style="text-align:center;">
+        <thead>
+            <tr>
+                <th>Opis</th>
+                <th>Typ</th>
+                <th>Wynik</th>
+                <th>Data rozpoczęcia</th>
+                <th>Przypisany pracownik</th>
+                <th>Przypisz</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var activity in activities)
+            {
+                <tr>
+                    <td>@activity.Description</td>
+                    <td>@activity.ActivityType.ActivityName</td>
+                    <td>@activity.Result</td>
+                    <td>@activity.Registered</td>
+                    <td>@(activity.Worker != null ? activity.Worker.FirstName + " " + activity.Worker.LastName + " (" + activity.Worker.Username + ")" : "Brak")</td>
+                    <td><input type="checkbox" class="checkbox-assign" @bind="assignActivities[activities.IndexOf(activity)]"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Guid WorkerId { get; set; }
+    [Parameter]
+    public Guid RequestId { get; set; }
+    private Employee worker;
+    private Request request;
+    private List<Activity> activities;
+    private List<bool> assignActivities;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        request = await requestService.GetRequest(RequestId);
+        worker = await employeeService.GetById(WorkerId);
+        activities = request.Activities.ToList();
+        assignActivities = new List<bool>();
+        foreach(var activity in request.Activities)
+        {
+            assignActivities.Add(false);
+        }
+    }
+
+    private async Task Assign()
+    {
+        for (int i = 0; i < assignActivities.Count; i++)
+        {
+            var activity = request.Activities.ElementAt(i);
+            if(assignActivities[i] == true)
+            {
+                activity.Worker = worker;
+                activityService.Update(activity);
+            }
+        }
+        await activityService.SaveChangesAsync();
+        navigationManager.NavigateTo($"/workers");
+    }
+}

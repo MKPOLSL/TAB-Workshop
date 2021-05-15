@@ -1,0 +1,53 @@
+﻿@page "/workers"
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IEmployeeService employeeService
+@attribute [AuthorizeRoles(Role.Manager)]
+
+
+<h3>Pracownicy</h3>
+
+
+@if (workers == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+<table class="table  table-striped table-bordered" style="text-align:center;">
+    <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Nazwa użytkownika</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var worker in workers)
+        {
+        <tr>
+            <td>@worker.FirstName</td>
+            <td>@worker.LastName</td>
+            <td>@worker.Username</td>
+            <td><button type="button" class="btn btn-primary" @onclick="() => AssignActivity(worker)">Przypisz czynności</button></td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+
+@code {
+    private IEnumerable<Employee> workers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        workers = await employeeService.GetAllAsync();
+        workers = workers.Where(e => e.Role == Role.Worker);
+        await base.OnInitializedAsync();
+    }
+
+    private void AssignActivity(Employee worker)
+    {
+        navigationManager.NavigateTo($"/requests/{worker.Id}");
+    }
+}
