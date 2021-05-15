@@ -31,12 +31,12 @@ else
                     <tr>
                         <td>@activity.ActivityType</td>
                         <td>@activity.Description</td>
-                        <td>@(activity.Result ?? "Aktywność nie jest jeszcze ukończona")</td>
+                        <td>@(activity.Result ?? " - ")</td>
                         <td>@activity.Status</td>
                         <td>@activity.Registered</td>
-                        <td>@(activity.FinishedOrCancelled )</td>
+                        <td>@(activity.FinishedOrCancelled == DateTime.MinValue ? "Aktywność nie jest jeszcze ukończona" : activity.FinishedOrCancelled.ToString())</td>
                         <td>
-                            <button type="button" class="btn btn-warning" @onclick="() => RealizeActivity(activity)">Wykonaj</button>
+                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">Wykonaj</button>
                             <button type="button" class="btn btn-danger" @onclick="() => EndActivity(activity)">Zakończ</button>
                         </td>
                     </tr>
@@ -51,10 +51,14 @@ else
 
         </div>
     }
+    <button @onclick="ShowModal" class="btn btn-primary">View Movies</button>
+
 }
 
 
 @code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
     private Employee worker;
     private IEnumerable<Activity> activities;
 
@@ -73,5 +77,20 @@ else
     protected void EndActivity(Activity activity)
     {
 
+    }
+
+    async Task ShowModal()
+    {
+        var moviesModal = Modal.Show<EditActivity>("My Movies");
+        var result = await moviesModal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            Console.WriteLine("Modal was closed");
+        }
     }
 }
