@@ -1,4 +1,4 @@
-﻿@page "/editActivity/{ActivityId:guid}/{RequestId:guid}"
+﻿@page "/editActivity/{ActivityId:guid}"
 @inject IActivityService activityService;
 @inject IEmployeeService employeeService;
 @inject IRequestService requestService;
@@ -60,8 +60,6 @@
 @code {
     [Parameter]
     public Guid ActivityId { get; set; }
-    [Parameter]
-    public Guid RequestId { get; set; }
 
     private Activity activity = new Activity();
 
@@ -84,5 +82,5 @@
         //navigationManager.NavigateTo("/cars");
     }
 
-    void Cancel() => navigationManager.NavigateTo($"/activities/{RequestId}");
+    void Cancel() => navigationManager.NavigateTo($"/activities");
 }

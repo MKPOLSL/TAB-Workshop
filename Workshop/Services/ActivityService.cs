@@ -23,8 +23,21 @@ namespace Workshop.Services
                 .GetAllNotHidden()
                 .Include(a => a.Worker)
                 .Include(a => a.ActivityType)
+                .Include(a => a.Request)
                 .Where(a => a.Id == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Activity>> GetWorkerActivities(Guid workerId)
+        {
+            return await Context
+                .Set<Activity>()
+                .GetAllNotHidden()
+                .Include(a => a.Worker)
+                .Include(a => a.ActivityType)
+                .Include(a => a.Request)
+                .Where(a => a.Worker.Id == workerId)
+                .ToListAsync();
         }
     }
 }

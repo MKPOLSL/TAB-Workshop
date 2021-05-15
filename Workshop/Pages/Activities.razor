@@ -2,10 +2,10 @@
 
 @using System.Threading.Tasks
 @inject IActivityService activityService
-@inject IRequestService requestService
+@inject IEmployeeService employeeService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-<h1>Realizuj Aktywności</h1>
+<h1>Realizuj Czynność</h1>
 @if (activities == null)
 {
     <div class="spinner"></div> }
@@ -31,10 +31,10 @@ else
                     <tr>
                         <td>@activity.ActivityType</td>
                         <td>@activity.Description</td>
-                        <td>@activity.Result</td>
+                        <td>@(activity.Result ?? "Aktywność nie jest jeszcze ukończona")</td>
                         <td>@activity.Status</td>
                         <td>@activity.Registered</td>
-                        <td>@activity.FinishedOrCancelled</td>
+                        <td>@(activity.FinishedOrCancelled )</td>
                         <td>
                             <button type="button" class="btn btn-warning" @onclick="() => RealizeActivity(activity)">Wykonaj</button>
                             <button type="button" class="btn btn-danger" @onclick="() => EndActivity(activity)">Zakończ</button>
@@ -55,21 +55,19 @@ else
 
 
 @code {
-    [Parameter]
-    public Guid RequestId { get; set; }
-    private Request request;
+    private Employee worker;
     private IEnumerable<Activity> activities;
 
     protected override async Task OnInitializedAsync()
     {
-        request = await requestService.GetRequest(RequestId);
-        activities = request.Activities;
+        worker = await employeeService.GetUserFromLocalStorage();
+        activities = await activityService.GetWorkerActivities(worker.Id);
         await base.OnInitializedAsync();
     }
 
     protected void RealizeActivity(Activity activity)
     {
-        navigationManager.NavigateTo($"/editActivity/{activity.Id}/{RequestId}");
+        navigationManager.NavigateTo($"/editActivity/{activity.Id}");
 
     }
     protected void EndActivity(Activity activity)
