@@ -16,12 +16,12 @@ else if (requests.Any())
     <thead>
         <tr>
             <th>Klient</th>
-            <th>Marka pojazdu</th>
+            <th>Marka</th>
             <th>Model</th>
             <th>Opis</th>
             <th>Wynik</th>
-            <th>Data rejestracji zgłoszenia</th>
-            <th>Data zakończenia zgłoszenia</th>
+            <th>Data rejestracji</th>
+            <th>Data zakończenia</th>
             <th>Status</th>
             <th>Akcje</th>
         </tr>
@@ -39,9 +39,9 @@ else if (requests.Any())
             <td>@request.FinishedOrCancelled</td>
             <td><span class="badge badge-@Badges.GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
             <td>
-                <button type="button" class="btn btn-success" style="width: 100px" @onclick="() => ShowActivities(request)">Zarządzaj</button>
                 @if (WorkerId == Guid.Empty)
                 {
+                    <button type="button" class="btn btn-success" style="width: 100px" @onclick="() => ShowActivities(request)">Zarządzaj</button>
                     @if (request.Activities.Any())
                     {
                         <button type="button" class="btn btn-warning" style="width: 170px" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button>

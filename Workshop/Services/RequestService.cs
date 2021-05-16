@@ -23,6 +23,7 @@ namespace Workshop.Services
                         .Include(e => e.Car)
                         .ThenInclude(c => c.Client)
                         .Include(e => e.Activities)
+                        .ThenInclude(e => e.Worker)
                         .Include(e => e.Manager)
                         .ToListAsync();
         }
