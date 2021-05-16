@@ -20,39 +20,45 @@
     <span class="validation-message">Wszystkie czynności muszą mieć opis!</span>
 }
 
-@foreach (var activity in activities)
+@if (activities == null)
 {
-    <div class="row" style="padding-top: 20px">
-        <div class="col-md-4">
-            <form>
-                <div class="form-group">
-                    <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
-                </div>
-                <div class="form-group">
-                    <select for="activityType" class="form-control" @bind="activity.ActivityType.Code">
-                        @foreach (ActivityType activityType in activityTypes)
-                        {
-                            <option value="@activityType.Code">@activityType.ActivityName</option>
-                        }
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-4">
-            <button type="button" class="btn btn-danger" @onclick="() => DeleteActivity(activity)">Usuń</button>
-            <button type="button" class="btn btn-primary fa fa-angle-up" style="margin-left: 8px" @onclick="() => MoveUp(activity)" disabled="@(IsFirst(activity))"></button>
-            <button type="button" class="btn btn-primary fa fa-angle-down" style="margin-left: 8px" @onclick="() => MoveDown(activity)" disabled="@(IsLast(activity))"></button>
-        </div>
-    </div>
+    <div class="spinner"></div>
 }
-
+else
+{
+    @foreach (var activity in activities)
+    {
+        <div class="row" style="padding-top: 20px">
+            <div class="col-md-4">
+                <form>
+                    <div class="form-group">
+                        <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select for="activityType" class="form-control" @bind="activity.ActivityType.Code">
+                            @foreach (ActivityType activityType in activityTypes)
+                            {
+                                <option value="@activityType.Code">@activityType.ActivityName</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" @onclick="() => DeleteActivity(activity)">Usuń</button>
+                <button type="button" class="btn btn-primary fa fa-angle-up" style="margin-left: 8px" @onclick="() => MoveUp(activity)" disabled="@(IsFirst(activity))"></button>
+                <button type="button" class="btn btn-primary fa fa-angle-down" style="margin-left: 8px" @onclick="() => MoveDown(activity)" disabled="@(IsLast(activity))"></button>
+            </div>
+        </div>
+    }
+}
 
 @code {
     [Parameter]
     public Guid RequestId { get; set; }
 
     private Request request;
-    private List<Activity> activities = new List<Activity>();
+    private List<Activity> activities;
     private IEnumerable<ActivityType> activityTypes;
     private bool DescriptionsNotEmpty = true;
 
@@ -61,6 +67,7 @@
         request = await requestService.GetRequest(RequestId);
         activityTypes = await activityTypeService.GetAllAsync();
         activities = request.Activities.ToList();
+
         foreach (var activity in activities)
         {
             activity.ActivityType = new ActivityType()
@@ -68,20 +75,20 @@
                 Code = activity.ActivityType.Code
             };
         }
-        if(activities.Count == 0)
+
+        if (activities.Count == 0)
         {
-            activities.Add(new Activity()
-            {
-                ActivityType = new ActivityType()
-                {
-                    Code = activityTypes.First().Code
-                }
-            });
+            AddActivity();
         }
     }
 
-    private void DeleteActivity(Activity activity)
+    private async Task DeleteActivity(Activity activity)
     {
+        if (request.Activities.Contains(activity))
+        {
+            activity.ActivityType = null;
+            activityService.Delete(activity);
+        }
         activities.Remove(activity);
     }
 
@@ -91,7 +98,7 @@
         {
             ActivityType = new ActivityType()
             {
-                Code = activityTypes.First().Code
+                Code = activityTypes.FirstOrDefault().Code
             }
         });
     }
@@ -107,9 +114,9 @@
             }
         }
         DescriptionsNotEmpty = true;
+
         for (int i = 0; i < activities.Count; i++)
         {
-            activities[i].Registered = DateTime.Now;
             activities[i].SequenceNumber = i;
             activities[i].ActivityType = await activityTypeService.GetActivityTypeByCode(activities[i].ActivityType.Code);
             if (activities[i].Request != null)
@@ -118,6 +125,7 @@
             }
             else
             {
+                activities[i].Registered = DateTime.Now;
                 activities[i].Status = Status.Pending;
                 activities[i].Request = request;
                 await activityService.CreateAsync(activities[i]);

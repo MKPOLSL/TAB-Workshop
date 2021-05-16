@@ -10,6 +10,7 @@ namespace Workshop.Interfaces.Services
     public interface IRequestService : IServiceBase<Request>
     {
         Task<Request> GetRequest(Guid id);
+        Request GetRequestSync(Guid id);
         Task<IEnumerable<Request>> GetAllRequests();
     }
 }

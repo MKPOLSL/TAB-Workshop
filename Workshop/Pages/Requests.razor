@@ -16,12 +16,12 @@ else if (requests.Any())
     <thead>
         <tr>
             <th>Klient</th>
-            <th>Marka pojazdu</th>
+            <th>Marka</th>
             <th>Model</th>
             <th>Opis</th>
             <th>Wynik</th>
-            <th>Data rejestracji zgłoszenia</th>
-            <th>Data zakończenia zgłoszenia</th>
+            <th>Data rejestracji</th>
+            <th>Data zakończenia</th>
             <th>Status</th>
             <th>Akcje</th>
         </tr>
@@ -38,21 +38,31 @@ else if (requests.Any())
             <td>@request.Reqistered</td>
             <td>@request.FinishedOrCancelled</td>
             <td><span class="badge badge-@Badges.GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
-            @if (WorkerId == Guid.Empty)
-            {
-                @if (request.Activities.Any())
+            <td>
+                @if (WorkerId == Guid.Empty)
                 {
-                    <td><button type="button" class="btn btn-warning" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button></td>
+                <div class="dropdown">
+                    <button class="dropbtn">Opcje</button>
+                    <div class="dropdown-content">
+                        <button type="button" class="btn btn-info request-button" @onclick="() => ShowActivities(request)">Zarządzaj</button>
+                        @if (request.Activities.Any())
+                        {
+                            <button type="button" class="btn btn-warning request-button" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary request-button" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button>
+                        }
+                        <button type="button" class="btn btn-success request-button" @onclick="() => ShowModal(request, true)">Zakończ</button>
+                        <button type="button" class="btn btn-danger request-button" @onclick="() => ShowModal(request, false)">Anuluj</button>
+                    </div>
+                </div>
                 }
                 else
                 {
-                    <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
+                    <button type="button" class="btn btn-primary request-button" @onclick="() => ShowRequests(request)">Przypisz czynności</button>
                 }
-            }
-            else
-            {
-                <td><button type="button" class="btn btn-primary" @onclick="() => ShowRequests(request)">Przypisz czynności</button></td>
-            }
+            </td>
         </tr>
         } 
     </tbody>
@@ -65,6 +75,7 @@ else {
 }
 
 @code { 
+    [CascadingParameter] public IModalService Modal { get; set; }
     [Parameter]
     public Guid WorkerId { get; set; }
     public IEnumerable<Request> requests;
@@ -86,5 +97,29 @@ else {
     protected void ShowRequests(Request request)
     {
         navigationManager.NavigateTo($"/assignActivities/{WorkerId}/{request.Id}");
+    }
+
+    protected void ShowActivities(Request request)
+    {
+        navigationManager.NavigateTo($"/activities/{request.Id}");
+    }
+
+    protected async Task ShowModal(Request request, bool finish)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(FinishRequest.RequestId), request.Id);
+        parameters.Add(nameof(FinishRequest.finish), finish);
+
+        var modal = Modal.Show<FinishRequest>("Zakończ lub anuluj zgłoszenie", parameters);
+        var result = await modal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            request = (Request)result.Data;
+        }
     }
 }
