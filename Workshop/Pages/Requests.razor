@@ -38,21 +38,24 @@ else if (requests.Any())
             <td>@request.Reqistered</td>
             <td>@request.FinishedOrCancelled</td>
             <td><span class="badge badge-@Badges.GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
-            @if (WorkerId == Guid.Empty)
-            {
-                @if (request.Activities.Any())
+            <td>
+                <button type="button" class="btn btn-success" style="width: 100px" @onclick="() => ShowActivities(request)">Zarządzaj</button>
+                @if (WorkerId == Guid.Empty)
                 {
-                    <td><button type="button" class="btn btn-warning" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button></td>
+                    @if (request.Activities.Any())
+                    {
+                        <button type="button" class="btn btn-warning" style="width: 170px" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" style="width: 170px" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button>
+                    }
                 }
                 else
                 {
-                    <td><button type="button" class="btn btn-primary" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button></td>
+                    <button type="button" class="btn btn-primary" style="width: 170px" @onclick="() => ShowRequests(request)">Przypisz czynności</button>
                 }
-            }
-            else
-            {
-                <td><button type="button" class="btn btn-primary" @onclick="() => ShowRequests(request)">Przypisz czynności</button></td>
-            }
+            </td>
         </tr>
         } 
     </tbody>
@@ -86,5 +89,10 @@ else {
     protected void ShowRequests(Request request)
     {
         navigationManager.NavigateTo($"/assignActivities/{WorkerId}/{request.Id}");
+    }
+
+    protected void ShowActivities(Request request)
+    {
+        navigationManager.NavigateTo($"/activities/{request.Id}");
     }
 }

@@ -1,11 +1,12 @@
 ﻿@page "/activities"
+@page "/activities/{RequestId:guid}"
 
 @using System.Threading.Tasks
 @inject IActivityService activityService
 @inject IEmployeeService employeeService
 @inject IRequestService requestService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-@attribute [AuthorizeRoles(Role.Worker)]
+@attribute [AuthorizeRoles(Role.Worker, Role.Manager)]
 
 <h1>Realizuj Czynność</h1>
 @if (activities == null)
@@ -42,7 +43,14 @@ else
                     <td>@activity.Registered</td>
                     <td>@(activity.FinishedOrCancelled == DateTime.MinValue ? " - " : activity.FinishedOrCancelled.ToString())</td>
                     <td style="min-width: 300px">
-                        <button type="button" class="btn btn-success" @onclick="() => RestoreActivity(activity)">Realizuj</button>
+                        @if (employee.Role == Role.Worker)
+                        {
+                            <button type="button" class="btn btn-success" @onclick="() => RestoreActivity(activity)">Realizuj</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-success" @onclick="() => EditActivity(activity)">Edytuj</button>
+                        }
                         <button type="button" class="btn btn-warning" @onclick="() => ShowModal(activity, true)">Zakończ</button>
                         <button type="button" class="btn btn-danger" @onclick="() => ShowModal(activity, false)">Anuluj</button>
                     </td>
@@ -63,23 +71,29 @@ else
 
 @code {
     [CascadingParameter] public IModalService Modal { get; set; }
+    [Parameter]
+    public Guid RequestId { get; set; }
+    private Request request;
 
-    private Employee worker;
+    private Employee employee;
     private IEnumerable<Activity> activities;
 
     protected override async Task OnInitializedAsync()
     {
-        worker = await employeeService.GetUserFromLocalStorage();
-        activities = await activityService.GetWorkerActivities(worker.Id);
-        activities.OrderBy(a => a.Request);
+        employee = await employeeService.GetUserFromLocalStorage();
+        if(employee.Role == Role.Worker)
+        {
+            activities = await activityService.GetWorkerActivities(employee.Id);
+            activities.OrderBy(a => a.Request);
+        }
+        else if(RequestId != Guid.Empty)
+        {
+            request = await requestService.GetRequest(RequestId);
+            activities = request.Activities;
+        }
         await base.OnInitializedAsync();
     }
 
-    protected void RealizeActivity(Activity activity)
-    {
-        navigationManager.NavigateTo($"/editActivity/{activity.Id}");
-
-    }
     protected async Task RestoreActivity(Activity activity)
     {
         activity.Result = "";
@@ -91,13 +105,18 @@ else
         await activityService.SaveChangesAsync();
     }
 
+    protected void EditActivity(Activity activity)
+    {
+        navigationManager.NavigateTo($"/editActivity/{activity.Id}");
+    }
+
     protected async Task ShowModal(Activity activity, bool finish)
     {
         var parameters = new ModalParameters();
-        parameters.Add(nameof(EditActivity.ActivityId), activity.Id);
-        parameters.Add(nameof(EditActivity.finish), finish);
+        parameters.Add(nameof(FinishActivity.ActivityId), activity.Id);
+        parameters.Add(nameof(FinishActivity.finish), finish);
 
-        var moviesModal = Modal.Show<EditActivity>("Zakończ lub anuluj czynność", parameters);
+        var moviesModal = Modal.Show<FinishActivity>("Zakończ lub anuluj czynność", parameters);
         var result = await moviesModal.Result;
 
         if (result.Cancelled)
@@ -109,4 +128,4 @@ else
             activity = (Activity)result.Data;
         }
     }
-    }
+}
