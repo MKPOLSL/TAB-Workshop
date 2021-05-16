@@ -20,39 +20,45 @@
     <span class="validation-message">Wszystkie czynności muszą mieć opis!</span>
 }
 
-@foreach (var activity in activities)
+@if (activities == null)
 {
-    <div class="row" style="padding-top: 20px">
-        <div class="col-md-4">
-            <form>
-                <div class="form-group">
-                    <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
-                </div>
-                <div class="form-group">
-                    <select for="activityType" class="form-control" @bind="activitiesActivityTypes[activities.IndexOf(activity)]">
-                        @foreach (ActivityType activityType in activityTypes)
-                        {
-                            <option value="@activityType.Code">@activityType.ActivityName</option>
-                        }
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-4">
-            <button type="button" class="btn btn-danger" @onclick="() => DeleteActivity(activity)">Usuń</button>
-            <button type="button" class="btn btn-primary fa fa-angle-up" style="margin-left: 8px" @onclick="() => MoveUp(activity)" disabled="@(IsFirst(activity))"></button>
-            <button type="button" class="btn btn-primary fa fa-angle-down" style="margin-left: 8px" @onclick="() => MoveDown(activity)" disabled="@(IsLast(activity))"></button>
-        </div>
-    </div>
+    <div class="spinner"></div>
 }
-
+else
+{
+    @foreach (var activity in activities)
+    {
+        <div class="row" style="padding-top: 20px">
+            <div class="col-md-4">
+                <form>
+                    <div class="form-group">
+                        <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select for="activityType" class="form-control" @bind="activitiesActivityTypes[activities.IndexOf(activity)]">
+                            @foreach (ActivityType activityType in activityTypes)
+                            {
+                                <option value="@activityType.Code">@activityType.ActivityName</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" @onclick="() => DeleteActivity(activity)">Usuń</button>
+                <button type="button" class="btn btn-primary fa fa-angle-up" style="margin-left: 8px" @onclick="() => MoveUp(activity)" disabled="@(IsFirst(activity))"></button>
+                <button type="button" class="btn btn-primary fa fa-angle-down" style="margin-left: 8px" @onclick="() => MoveDown(activity)" disabled="@(IsLast(activity))"></button>
+            </div>
+        </div>
+    }
+}
 
 @code {
     [Parameter]
     public Guid RequestId { get; set; }
 
     private Request request;
-    private List<Activity> activities = new List<Activity>();
+    private List<Activity> activities;
     private List<string> activitiesActivityTypes = new List<string>();
     private IEnumerable<ActivityType> activityTypes;
     private bool DescriptionsNotEmpty = true;
@@ -63,12 +69,12 @@
         activityTypes = await activityTypeService.GetAllAsync();
         activities = request.Activities.ToList();
 
-        foreach(var activity in activities)
+        foreach (var activity in activities)
         {
             activitiesActivityTypes.Add(activity.ActivityType.Code);
         }
 
-        if(activities.Count == 0)
+        if (activities.Count == 0)
         {
             AddActivity();
         }
