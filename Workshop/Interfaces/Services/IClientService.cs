@@ -9,7 +9,6 @@ namespace Workshop.Interfaces
 {
     public interface IClientService : IServiceBase<Client>
     {
-        Task AddClient(ClientCreateDto client);
         Task<Client> GetClientById(Guid id);
     }
 }
