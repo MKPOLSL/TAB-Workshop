@@ -35,7 +35,7 @@ else
                         <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
                     </div>
                     <div class="form-group">
-                        <select for="activityType" class="form-control" @bind="activitiesActivityTypes[activities.IndexOf(activity)]">
+                        <select for="activityType" class="form-control" @bind="activity.ActivityType.Code">
                             @foreach (ActivityType activityType in activityTypes)
                             {
                                 <option value="@activityType.Code">@activityType.ActivityName</option>
@@ -59,7 +59,6 @@ else
 
     private Request request;
     private List<Activity> activities;
-    private List<string> activitiesActivityTypes = new List<string>();
     private IEnumerable<ActivityType> activityTypes;
     private bool DescriptionsNotEmpty = true;
 
@@ -71,7 +70,10 @@ else
 
         foreach (var activity in activities)
         {
-            activitiesActivityTypes.Add(activity.ActivityType.Code);
+            activity.ActivityType = new ActivityType()
+            {
+                Code = activity.ActivityType.Code
+            };
         }
 
         if (activities.Count == 0)
@@ -84,16 +86,21 @@ else
     {
         if (request.Activities.Contains(activity))
         {
+            activity.ActivityType = await activityTypeService.GetActivityTypeByCode(activity.ActivityType.Code);
             activityService.Delete(activity);
-            await activityService.SaveChangesAsync();
         }
         activities.Remove(activity);
     }
 
     private void AddActivity()
     {
-        activities.Add(new Activity());
-        activitiesActivityTypes.Add(activityTypes.First().Code);
+        activities.Add(new Activity()
+        {
+            ActivityType = new ActivityType()
+            {
+                Code = activityTypes.FirstOrDefault().Code
+            }
+        });
     }
 
     private async Task SaveActivities()
@@ -111,7 +118,7 @@ else
         for (int i = 0; i < activities.Count; i++)
         {
             activities[i].SequenceNumber = i;
-            activities[i].ActivityType = await activityTypeService.GetActivityTypeByCode(activitiesActivityTypes[i]);
+            activities[i].ActivityType = await activityTypeService.GetActivityTypeByCode(activities[i].ActivityType.Code);
             if (activities[i].Request != null)
             {
                 activityService.Update(activities[i]);
@@ -133,9 +140,6 @@ else
         var currentIndex = activities.IndexOf(activity);
         activities[currentIndex] = activities[currentIndex - 1];
         activities[currentIndex - 1] = activity;
-        var currentType = activitiesActivityTypes[currentIndex];
-        activitiesActivityTypes[currentIndex] = activitiesActivityTypes[currentIndex - 1];
-        activitiesActivityTypes[currentIndex - 1] = currentType;
     }
 
     private void MoveDown(Activity activity)
@@ -143,9 +147,6 @@ else
         var currentIndex = activities.IndexOf(activity);
         activities[currentIndex] = activities[currentIndex + 1];
         activities[currentIndex + 1] = activity;
-        var currentType = activitiesActivityTypes[currentIndex];
-        activitiesActivityTypes[currentIndex] = activitiesActivityTypes[currentIndex + 1];
-        activitiesActivityTypes[currentIndex + 1] = currentType;
     }
 
     private bool IsSelected(Activity activity, ActivityType activityType)
