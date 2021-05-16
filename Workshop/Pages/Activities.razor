@@ -3,7 +3,9 @@
 @using System.Threading.Tasks
 @inject IActivityService activityService
 @inject IEmployeeService employeeService
+@inject IRequestService requestService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Worker)]
 
 <h1>Realizuj Czynność</h1>
 @if (activities == null)
@@ -83,6 +85,8 @@ else
         activity.Result = "";
         activity.FinishedOrCancelled = default;
         activity.Status = Status.InProgress;
+        activity.Request.Status = Status.InProgress;
+        requestService.Update(activity.Request);
         activityService.Update(activity);
         await activityService.SaveChangesAsync();
     }
