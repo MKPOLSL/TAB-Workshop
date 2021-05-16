@@ -86,7 +86,7 @@ else
     {
         if (request.Activities.Contains(activity))
         {
-            activity.ActivityType = await activityTypeService.GetActivityTypeByCode(activity.ActivityType.Code);
+            activity.ActivityType = null;
             activityService.Delete(activity);
         }
         activities.Remove(activity);
