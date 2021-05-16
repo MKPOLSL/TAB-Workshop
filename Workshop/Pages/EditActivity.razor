@@ -1,88 +1,42 @@
-﻿@page "/editActivity/{ActivityId:guid}/{RequestId:guid}"
+﻿@page "/editActivity/{ActivityId:guid}"
 @inject IActivityService activityService;
 @inject IEmployeeService employeeService;
 @inject IRequestService requestService;
 
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-
-<h1>Edytuj Aktywność</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <form>
-            <div class="form-group">
-                <label for="Name" class="control-label">Opis</label>
-                <input for="Name" class="form-control" @bind-value="@activity.Description" />
-            </div>
-            <div class="form-group">
-                <label for="Name" class="control-label">Wynik</label>
-                <input for="Name" class="form-control" @bind-value="@activity.Result" />
-            </div>
-            <div class="form-group">
-                <label for="Name" class="control-label">Status</label>
-                <input for="Name" class="form-control" @bind-value="@activity.Status" />
-            </div>
-            <div class="form-group">
-                <label for="Name" class="control-label">Data rejestracji aktywności</label>
-                <input for="Name" class="form-control" @bind-value="@activity.Registered" />
-            </div>
-            <div class="form-group">
-                <label for="Name" class="control-label">Data zakończenia aktywności</label>
-                <input for="Name" class="form-control" @bind-value="@activity.FinishedOrCancelled" />
-            </div>
-            @*<div class="form-group">
-                    <label for="Role" class="control-label">Typ</label>
-                    <select for="Role" class="form-control" @bind="@carClientId">
-                        @foreach (Client client in clients)
-                        {
-                            <option value="@client.Id">@client.FirstName @client.LastName</option>
-                        }
-                    </select>
-                </div>*@
-            <div class="form-group">
-                <label for="Role" class="control-label">Typ</label>
-                @*<select for="Role" class="form-control" @bind="@activity.ActivityType.ActivityName">
-                    @foreach (ActivityType activityType in activityTypes)
-                    {
-                        <option value="@activityType.ActivityName">@activityType.ActivityName</option>
-                    }
-                </select>*@
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-primary" @onclick="() => DoEditActivity(activity)">Zapisz</button>
-                <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
-            </div>
-        </form>
-    </div>
-</div>
-
+    <form>
+        <div class="form-group">
+            <textarea placeholder="Opis aktywności" @bind="activity.Result" class="form-control" id="Description" rows="4" maxlength="400" style="resize:none"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn @(finish ? "btn-primary" : "btn-danger")" @onclick="() => FinishActivity()">@(finish ? "Zakończ" : "Anuluj")</button>
+        </div>
+    </form>
 @code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
     [Parameter]
     public Guid ActivityId { get; set; }
+
     [Parameter]
-    public Guid RequestId { get; set; }
+    public bool finish { get; set; }
 
-    private Activity activity = new Activity();
+    private Activity activity;
 
-    private IEnumerable<ActivityType> activityTypes = new List<ActivityType>();
-    //private IEnumerable<Employee> workers = new List<Employee>();
-
-    protected override async Task OnParametersSetAsync()
+    protected override void OnInitialized()
     {
-        //activity = await activityService.GetActivity(ActivityId);
-
-        //workers = await employeeService.GetWorkerById()
-        //base.OnParametersSet();
+        activity = activityService.GetActivitySync(ActivityId);
     }
 
-    protected async Task DoEditActivity(Activity activity)
+    protected async Task FinishActivity()
     {
-        //car.CarType = await carTypeService.GetTypeByTypeName(car.CarType.TypeName);
-        //carService.Update(car);
-        //await carService.SaveChangesAsync();
+        activity.Status = finish ? Status.Finished : Status.Canceled;
+        activity.FinishedOrCancelled = DateTime.Now;
+        activityService.Update(activity);
+        await activityService.SaveChangesAsync();
+        await ModalInstance.CloseAsync(ModalResult.Ok(activity));
         //navigationManager.NavigateTo("/cars");
     }
 
-    void Cancel() => navigationManager.NavigateTo($"/activities/{RequestId}");
 }
