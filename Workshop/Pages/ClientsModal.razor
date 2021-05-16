@@ -1,0 +1,48 @@
+﻿@inject IClientService clientService
+@attribute [AuthorizeRoles(Role.Manager)]
+
+@if (clients == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <table class="table  table-striped table-bordered" style="text-align:center;">
+        <thead>
+            <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Numer telefonu</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td>@client.FirstName</td>
+                    <td>@client.LastName</td>
+                    <td>@client.PhoneNumber</td>
+                    <td><button type="button" class="btn btn-primary" @onclick="() => AssignClient(client)">Wybierz</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    private IEnumerable<Client> clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clients = await clientService.GetAllAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task AssignClient(Client client)
+    {
+        await ModalInstance.CloseAsync(ModalResult.Ok(client));
+    }
+}
