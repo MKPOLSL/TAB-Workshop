@@ -23,6 +23,7 @@ namespace Workshop.Services
                         .Include(e => e.Car)
                         .ThenInclude(c => c.Client)
                         .Include(e => e.Activities)
+                        .ThenInclude(e => e.Worker)
                         .Include(e => e.Manager)
                         .ToListAsync();
         }
@@ -35,9 +36,20 @@ namespace Workshop.Services
                         .ThenInclude(c => c.Client)
                         .Include(e => e.Activities)
                         .ThenInclude(e => e.ActivityType)
+                        .Include(e => e.Activities)
+                        .ThenInclude(e => e.Worker)
                         .Include(e => e.Manager)
                         .Where(e => e.Id == id)
                         .FirstOrDefaultAsync();
+        }
+
+        public Request GetRequestSync(Guid id)
+        {
+            return Context
+                .Set<Request>()
+                .GetAllNotHidden()
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
         }
     }
 }

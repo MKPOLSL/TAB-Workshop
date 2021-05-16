@@ -1,0 +1,39 @@
+﻿@inject IEmployeeService employeeService
+@inject IRequestService requestService
+
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+<form>
+    <div class="form-group">
+        <textarea placeholder="Opis aktywności" @bind="request.Result" class="form-control" id="Description" rows="4" maxlength="400" style="resize:none"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn @(finish ? "btn-primary" : "btn-danger")" @onclick="() => Finish()">@(finish ? "Zakończ" : "Anuluj")</button>
+    </div>
+</form>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter]
+    public Guid RequestId { get; set; }
+
+    [Parameter]
+    public bool finish { get; set; }
+
+    private Request request;
+
+    protected override void OnInitialized()
+    {
+        request = requestService.GetRequestSync(RequestId);
+    }
+
+    protected async Task Finish()
+    {
+        request.Status = finish ? Status.Finished : Status.Canceled;
+        request.FinishedOrCancelled = DateTime.Now;
+        requestService.Update(request);
+        await requestService.SaveChangesAsync();
+        await ModalInstance.CloseAsync(ModalResult.Ok(request));
+    }
+}
