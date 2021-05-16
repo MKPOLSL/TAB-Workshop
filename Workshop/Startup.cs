@@ -31,8 +31,7 @@ namespace Workshop
 
             services.AddDbContext<CarContext>(options =>
                           options.UseSqlServer(
-                              Configuration.GetConnectionString("DefaultConnection")), 
-                              ServiceLifetime.Transient
+                              Configuration.GetConnectionString("DefaultConnection"))
                               );
             //services  
             services.AddScoped<ICarService, CarService>();
