@@ -37,7 +37,7 @@ else if (requests.Any())
             <td>@request.Result</td>
             <td>@request.Reqistered</td>
             <td>@request.FinishedOrCancelled</td>
-            <td><span class="badge badge-@GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
+            <td><span class="badge badge-@Badges.GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
             @if (WorkerId == Guid.Empty)
             {
                 @if (request.Activities.Any())
@@ -74,18 +74,9 @@ else {
     {
         requests = await requestService.GetAllRequests();
         manager = await employeeService.GetUserFromLocalStorage();
-        requests = requests.Where(r => r.Manager == manager);
+        requests = requests.Where(r => r.Manager.Username == manager.Username);
         await base.OnInitializedAsync();
     }
-
-    private string GetBadge(Status status) => status switch
-    {
-        Status.Pending => "secondary",
-        Status.InProgress => "warning",
-        Status.Finished => "success",
-        Status.Canceled => "danger",
-        _ => "dark"
-    };
 
     protected void DecomposeActivity(Request request)
     {
