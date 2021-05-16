@@ -74,7 +74,7 @@ else {
     {
         requests = await requestService.GetAllRequests();
         manager = await employeeService.GetUserFromLocalStorage();
-        requests = requests.Where(r => r.Manager == manager);
+        requests = requests.Where(r => r.Manager.Username == manager.Username);
         await base.OnInitializedAsync();
     }
 
