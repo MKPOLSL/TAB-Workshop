@@ -41,19 +41,26 @@ else if (requests.Any())
             <td>
                 @if (WorkerId == Guid.Empty)
                 {
-                    <button type="button" class="btn btn-success" style="width: 100px" @onclick="() => ShowActivities(request)">Zarządzaj</button>
-                    @if (request.Activities.Any())
-                    {
-                        <button type="button" class="btn btn-warning" style="width: 170px" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-primary" style="width: 170px" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button>
-                    }
+                <div class="dropdown">
+                    <button class="dropbtn">Opcje</button>
+                    <div class="dropdown-content">
+                        <button type="button" class="btn btn-info request-button" @onclick="() => ShowActivities(request)">Zarządzaj</button>
+                        @if (request.Activities.Any())
+                        {
+                            <button type="button" class="btn btn-warning request-button" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary request-button" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button>
+                        }
+                        <button type="button" class="btn btn-success request-button" @onclick="() => ShowModal(request, true)">Zakończ</button>
+                        <button type="button" class="btn btn-danger request-button" @onclick="() => ShowModal(request, false)">Anuluj</button>
+                    </div>
+                </div>
                 }
                 else
                 {
-                    <button type="button" class="btn btn-primary" style="width: 170px" @onclick="() => ShowRequests(request)">Przypisz czynności</button>
+                    <button type="button" class="btn btn-primary request-button" @onclick="() => ShowRequests(request)">Przypisz czynności</button>
                 }
             </td>
         </tr>
@@ -68,6 +75,7 @@ else {
 }
 
 @code { 
+    [CascadingParameter] public IModalService Modal { get; set; }
     [Parameter]
     public Guid WorkerId { get; set; }
     public IEnumerable<Request> requests;
@@ -94,5 +102,24 @@ else {
     protected void ShowActivities(Request request)
     {
         navigationManager.NavigateTo($"/activities/{request.Id}");
+    }
+
+    protected async Task ShowModal(Request request, bool finish)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(FinishRequest.RequestId), request.Id);
+        parameters.Add(nameof(FinishRequest.finish), finish);
+
+        var modal = Modal.Show<FinishRequest>("Zakończ lub anuluj zgłoszenie", parameters);
+        var result = await modal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            request = (Request)result.Data;
+        }
     }
 }
