@@ -82,8 +82,11 @@ else
 
     private async Task DeleteActivity(Activity activity)
     {
-        activityService.Delete(activity);
-        await activityService.SaveChangesAsync();
+        if (request.Activities.Contains(activity))
+        {
+            activityService.Delete(activity);
+            await activityService.SaveChangesAsync();
+        }
         activities.Remove(activity);
     }
 
