@@ -38,7 +38,7 @@ else
                     <td>@activity.ActivityType.ActivityName</td>
                     <td>@activity.Description</td>
                     <td>@(string.IsNullOrWhiteSpace(activity.Result) ? " - " : activity.Result)</td>
-                    <td>@activity.Status.GetDisplayName()</td>
+                    <td><span class="badge badge-@Badges.GetBadge(activity.Status)">@activity.Status.GetDisplayName()</span></td>
                     <td>@activity.Registered</td>
                     <td>@(activity.FinishedOrCancelled == DateTime.MinValue ? " - " : activity.FinishedOrCancelled.ToString())</td>
                     <td style="min-width: 300px">
