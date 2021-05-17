@@ -40,8 +40,7 @@ namespace Workshop.Services.Base
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             IQueryable<T> set = Context
-                .Set<T>()
-                .GetAllNotHidden();
+                .Set<T>();
             return await set.ToListAsync();
         }
 
