@@ -4,7 +4,6 @@
 @attribute [AuthorizeRoles(Role.Administrator)]
 
 <h1>Pracownicy</h1>
-<button type="button" class="btn btn-primary" @onclick="() => AddNewEmployee()">Dodaj nowego pracownika</button>
 
 @if (employees == null)
 {
@@ -21,7 +20,9 @@ else
                     <th>Nazwisko</th>
                     <th>Nazwa użytkownika</th>
                     <th>Hasło</th>
-                    <th>Akcje</th>
+                    <th>
+                        <button type="button" class="btn btn-primary" @onclick="() => AddNewEmployee()">Dodaj nowego pracownika</button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
