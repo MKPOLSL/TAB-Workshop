@@ -4,7 +4,6 @@
 @attribute [AuthorizeRoles(Role.Administrator)]
 
 <h1>Pracownicy</h1>
-<button type="button" class="btn btn-primary" @onclick="() => AddNewEmployee()">Dodaj nowego pracownika</button>
 
 @if (employees == null)
 {
@@ -17,11 +16,14 @@ else
         <table class="table  table-striped table-bordered" style="text-align:center; margin-top: 16px;">
             <thead>
                 <tr>
+                    <th>Rola</th>
                     <th>Imię</th>
                     <th>Nazwisko</th>
                     <th>Nazwa użytkownika</th>
                     <th>Hasło</th>
-                    <th>Akcje</th>
+                    <th>
+                        <button type="button" class="btn btn-primary" @onclick="() => AddNewEmployee()">Dodaj nowego pracownika</button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +31,9 @@ else
                 @foreach (var employee in employees)
                 {
                     <tr>
+                        <td>
+                            <span class="badge badge-@GetBadge(employee.Role)">@employee.Role</span>
+                        </td>
                         <td>@employee.FirstName</td>
                         <td>@employee.LastName</td>
                         <td>@employee.Username</td>
@@ -75,4 +80,11 @@ else
         navigationManager.NavigateTo("/employees", forceLoad: true);
     }
 
+    private string GetBadge(Role role) => role switch
+    {
+        Role.Administrator => "secondary",
+        Role.Manager => "warning",
+        Role.Worker => "success",
+        _ => "dark"
+    };
 }

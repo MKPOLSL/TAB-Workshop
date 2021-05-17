@@ -20,11 +20,11 @@ namespace Workshop.Entities
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Imię jest wymagane")]
-        [RegularExpression(@"[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{20}", ErrorMessage = "Dozwolone tylko litery")]
+        [RegularExpression(@"[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{3,20}", ErrorMessage = "Dozwolone tylko litery")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Nazwisko jest wymagane")]
-        [RegularExpression(@"[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{20}", ErrorMessage = "Dozwolone tylko litery")]
+        [RegularExpression(@"[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{3,20}", ErrorMessage = "Dozwolone tylko litery")]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Rola jest wymagana")]
 

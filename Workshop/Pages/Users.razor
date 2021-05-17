@@ -1,0 +1,75 @@
+﻿@page "/users"
+@inject IEmployeeService employeeService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Administrator)]
+
+<h1>Pracownicy</h1>
+
+@if (employees == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <table class="table">
+        <colgroup>
+            <col style="width:10%" />
+            <col />
+            <col />
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Rola</th>
+                <th>Username</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in employees)
+            {
+            <tr>
+                <td>
+
+                    <span class="badge badge-@GetBadge(employee.Role)">@employee.Role</span>
+                </td>
+                <td>@employee.Username</td>
+                <td>@employee.FirstName</td>
+                <td>@employee.LastName</td>
+                <td><button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal">Przypisz nową rolę</button></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<Modal Id="exampleModal" Title="Pies" >
+    <Body>
+        <ChangeRoleModal />
+    </Body>
+</Modal>
+
+@code {
+    private IEnumerable<Employee> employees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await employeeService.GetAllAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private string GetBadge(Role role) => role switch
+    {
+        Role.Administrator => "secondary",
+        Role.Manager => "warning",
+        Role.Worker => "success",
+        _ => "dark"
+    };
+
+    private void ChangeRole(Employee employee)
+    {
+        employee.Role = Role.Administrator;
+    }
+}
