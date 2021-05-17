@@ -16,6 +16,7 @@ else
         <table class="table  table-striped table-bordered" style="text-align:center; margin-top: 16px;">
             <thead>
                 <tr>
+                    <th>Rola</th>
                     <th>Imię</th>
                     <th>Nazwisko</th>
                     <th>Nazwa użytkownika</th>
@@ -30,6 +31,9 @@ else
                 @foreach (var employee in employees)
                 {
                     <tr>
+                        <td>
+                            <span class="badge badge-@GetBadge(employee.Role)">@employee.Role</span>
+                        </td>
                         <td>@employee.FirstName</td>
                         <td>@employee.LastName</td>
                         <td>@employee.Username</td>
@@ -76,4 +80,11 @@ else
         navigationManager.NavigateTo("/employees", forceLoad: true);
     }
 
+    private string GetBadge(Role role) => role switch
+    {
+        Role.Administrator => "secondary",
+        Role.Manager => "warning",
+        Role.Worker => "success",
+        _ => "dark"
+    };
 }
