@@ -11,11 +11,14 @@ namespace Workshop.Entities
     public class Client : HideableEntity
     {
         public Guid Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Imię jest wymagane")]
+        [RegularExpression(@"[a-zA-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{3,20}", ErrorMessage = "Dozwolone tylko litery")]
         public string FirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
+        [RegularExpression(@"[a-zA-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{3,20}", ErrorMessage = "Dozwolone tylko litery")]
         public string LastName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Numer telefonu jest wymagany")]
+        [RegularExpression(@"^\+?[0-9]{2}-?[0-9]{7}$", ErrorMessage = "Numer jest niepoprawny")]
         public string PhoneNumber { get; set; }
 
         public virtual IEnumerable<Car> Cars { get; set; }

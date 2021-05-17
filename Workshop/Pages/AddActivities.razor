@@ -1,0 +1,173 @@
+﻿@page "/addActivities/{RequestId:guid}"
+@inject IActivityService activityService
+@inject IRequestService requestService
+@inject IActivityTypeService activityTypeService
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@attribute [AuthorizeRoles(Role.Manager)]
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<h3>Dodaj aktywności do zgłoszenia</h3>
+
+<div class="row" style="padding-top: 20px">
+    <div class="col-md-4">
+        <button type="button" class="btn btn-primary" @onclick="() => AddActivity()">Dodaj czynność</button>
+        <button type="button" class="btn btn-success" @onclick="() => SaveActivities()">Zatwierdź</button>
+    </div>
+</div>
+
+@if (!DescriptionsNotEmpty)
+{
+    <span class="validation-message">Wszystkie czynności muszą mieć opis!</span>
+}
+
+@if (activities == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    @foreach (var activity in activities)
+    {
+        <div class="row" style="padding-top: 20px">
+            <div class="col-md-4">
+                <form>
+                    <div class="form-group">
+                        <textarea placeholder="Opis aktywności" @bind="activity.Description" class="form-control" id="Description" rows="1" maxlength="100" style="resize:none"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select for="activityType" class="form-control" @bind="activity.ActivityType.Code">
+                            @foreach (ActivityType activityType in activityTypes)
+                            {
+                                <option value="@activityType.Code">@activityType.ActivityName</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" @onclick="() => DeleteActivity(activity)">Usuń</button>
+                <button type="button" class="btn btn-primary fa fa-angle-up" style="margin-left: 8px" @onclick="() => MoveUp(activity)" disabled="@(IsFirst(activity))"></button>
+                <button type="button" class="btn btn-primary fa fa-angle-down" style="margin-left: 8px" @onclick="() => MoveDown(activity)" disabled="@(IsLast(activity))"></button>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public Guid RequestId { get; set; }
+
+    private Request request;
+    private List<Activity> activities;
+    private IEnumerable<ActivityType> activityTypes;
+    private bool DescriptionsNotEmpty = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        request = await requestService.GetRequest(RequestId);
+        activityTypes = await activityTypeService.GetAllAsync();
+        activities = request.Activities.ToList();
+
+        foreach (var activity in activities)
+        {
+            activity.ActivityType = new ActivityType()
+            {
+                Code = activity.ActivityType.Code
+            };
+        }
+
+        if (activities.Count == 0)
+        {
+            AddActivity();
+        }
+    }
+
+    private async Task DeleteActivity(Activity activity)
+    {
+        if (request.Activities.Contains(activity))
+        {
+            activity.ActivityType = null;
+            activityService.Delete(activity);
+        }
+        activities.Remove(activity);
+    }
+
+    private void AddActivity()
+    {
+        activities.Add(new Activity()
+        {
+            ActivityType = new ActivityType()
+            {
+                Code = activityTypes.FirstOrDefault().Code
+            }
+        });
+    }
+
+    private async Task SaveActivities()
+    {
+        foreach (var activity in activities)
+        {
+            if (string.IsNullOrWhiteSpace(activity.Description))
+            {
+                DescriptionsNotEmpty = false;
+                return;
+            }
+        }
+        DescriptionsNotEmpty = true;
+
+        for (int i = 0; i < activities.Count; i++)
+        {
+            activities[i].SequenceNumber = i;
+            activities[i].ActivityType = await activityTypeService.GetActivityTypeByCode(activities[i].ActivityType.Code);
+            if (activities[i].Request != null)
+            {
+                activityService.Update(activities[i]);
+            }
+            else
+            {
+                activities[i].Registered = DateTime.Now;
+                activities[i].Status = Status.Pending;
+                activities[i].Request = request;
+                await activityService.CreateAsync(activities[i]);
+            }
+        }
+        await activityService.SaveChangesAsync();
+        navigationManager.NavigateTo($"/requests");
+    }
+
+    private void MoveUp(Activity activity)
+    {
+        var currentIndex = activities.IndexOf(activity);
+        activities[currentIndex] = activities[currentIndex - 1];
+        activities[currentIndex - 1] = activity;
+    }
+
+    private void MoveDown(Activity activity)
+    {
+        var currentIndex = activities.IndexOf(activity);
+        activities[currentIndex] = activities[currentIndex + 1];
+        activities[currentIndex + 1] = activity;
+    }
+
+    private bool IsSelected(Activity activity, ActivityType activityType)
+    {
+        if (activity.ActivityType != null)
+        {
+            return activity.ActivityType == activityType;
+        }
+        else
+        {
+            return activityType == activityTypes.First();
+        }
+    }
+
+    private bool IsLast(Activity activity)
+    {
+        return activity == activities.Last();
+    }
+
+    private bool IsFirst(Activity activity)
+    {
+        return activity == activities.First();
+    }
+}

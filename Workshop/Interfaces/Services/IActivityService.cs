@@ -9,6 +9,8 @@ namespace Workshop.Interfaces
 {
     interface IActivityService : IServiceBase<Activity>
     {
-        Task AddActivity();
+        Task<Activity> GetActivity(Guid id);
+        Activity GetActivitySync(Guid id);
+        Task<IEnumerable<Activity>> GetWorkerActivities(Guid workerId);
     }
 }

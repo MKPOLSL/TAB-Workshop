@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Workshop.Dtos;
 using Workshop.Entities;
 using Workshop.Interfaces.Services.Base;
 
 namespace Workshop.Interfaces
 {
-    public interface IClientService : IServiceBase<Client>
+    interface IActivityTypeService : IServiceBase<ActivityType>
     {
-        Task<Client> GetClientById(Guid id);
+        Task<ActivityType> GetActivityTypeByCode(string code);
     }
 }

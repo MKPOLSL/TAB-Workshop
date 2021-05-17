@@ -15,13 +15,19 @@ namespace Workshop.Entities
 
         [Required(ErrorMessage = "Nazwa użytkownika jest wymagana")]
         public string Username { get; set; }
+
         [Required(ErrorMessage = "Hasło jest wymagane")]
         public string Password { get; set; }
+
         [Required(ErrorMessage = "Imię jest wymagane")]
+        [RegularExpression(@"[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{20}", ErrorMessage = "Dozwolone tylko litery")]
         public string FirstName { get; set; }
+
         [Required(ErrorMessage = "Nazwisko jest wymagane")]
+        [RegularExpression(@"[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{20}", ErrorMessage = "Dozwolone tylko litery")]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Rola jest wymagana")]
+
         public Role Role { get; set; }
 
         public virtual IEnumerable<Request> Requests { get; set; }

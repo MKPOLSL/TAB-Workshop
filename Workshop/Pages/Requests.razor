@@ -1,0 +1,125 @@
+﻿@page "/requests"
+@page "/requests/{WorkerId:guid}"
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IRequestService requestService
+@inject IEmployeeService employeeService
+@attribute [AuthorizeRoles(Role.Manager)]
+<h1>Zgłoszenia</h1>
+
+@if (requests == null)
+{
+<div class="spinner"></div> 
+}            
+else if (requests.Any())
+{
+<table id="activityTable" class="table table-striped table-bordered" style="text-align:center;">
+    <thead>
+        <tr>
+            <th>Klient</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Opis</th>
+            <th>Wynik</th>
+            <th>Data rejestracji</th>
+            <th>Data zakończenia</th>
+            <th>Status</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in requests)
+        {
+        <tr>
+            <td>@request.Car.Client.FirstName @request.Car.Client.LastName</td>
+            <td>@request.Car.Brand</td>
+            <td>@request.Car.Model</td>
+            <td>@request.Description</td>
+            <td>@request.Result</td>
+            <td>@request.Reqistered</td>
+            <td>@request.FinishedOrCancelled</td>
+            <td><span class="badge badge-@Badges.GetBadge(request.Status)">@request.Status.GetDisplayName()</span></td>
+            <td>
+                @if (WorkerId == Guid.Empty)
+                {
+                <div class="dropdown">
+                    <button class="dropbtn">Opcje</button>
+                    <div class="dropdown-content">
+                        <button type="button" class="btn btn-info request-button" @onclick="() => ShowActivities(request)">Zarządzaj</button>
+                        @if (request.Activities.Any())
+                        {
+                            <button type="button" class="btn btn-warning request-button" @onclick="() => DecomposeActivity(request)">Edytuj czynności</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary request-button" @onclick="() => DecomposeActivity(request)">Przypisz czynności</button>
+                        }
+                        <button type="button" class="btn btn-success request-button" @onclick="() => ShowModal(request, true)">Zakończ</button>
+                        <button type="button" class="btn btn-danger request-button" @onclick="() => ShowModal(request, false)">Anuluj</button>
+                    </div>
+                </div>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary request-button" @onclick="() => ShowRequests(request)">Przypisz czynności</button>
+                }
+            </td>
+        </tr>
+        } 
+    </tbody>
+</table> 
+}
+else {
+<div style="padding-top: 25px">
+    <h2>Nie masz żadnych zgłoszeń</h2>
+</div>
+}
+
+@code { 
+    [CascadingParameter] public IModalService Modal { get; set; }
+    [Parameter]
+    public Guid WorkerId { get; set; }
+    public IEnumerable<Request> requests;
+    private Employee manager;
+
+    protected override async Task OnInitializedAsync()
+    {
+        requests = await requestService.GetAllRequests();
+        manager = await employeeService.GetUserFromLocalStorage();
+        requests = requests.Where(r => r.Manager.Username == manager.Username);
+        await base.OnInitializedAsync();
+    }
+
+    protected void DecomposeActivity(Request request)
+    {
+        navigationManager.NavigateTo($"/addActivities/{request.Id}");
+    }
+
+    protected void ShowRequests(Request request)
+    {
+        navigationManager.NavigateTo($"/assignActivities/{WorkerId}/{request.Id}");
+    }
+
+    protected void ShowActivities(Request request)
+    {
+        navigationManager.NavigateTo($"/activities/{request.Id}");
+    }
+
+    protected async Task ShowModal(Request request, bool finish)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(FinishRequest.RequestId), request.Id);
+        parameters.Add(nameof(FinishRequest.finish), finish);
+
+        var modal = Modal.Show<FinishRequest>("Zakończ lub anuluj zgłoszenie", parameters);
+        var result = await modal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            request = (Request)result.Data;
+        }
+    }
+}

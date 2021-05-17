@@ -1,49 +1,61 @@
 ﻿@page "/cars"
 @inject ICarService carService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IEmployeeService employeeService
 @attribute [AuthorizeRoles(Role.Manager)]
 
 <h1>Samochody</h1>
 
 @if (cars == null)
 {
-    <div class="spinner"></div>
+<div class="spinner"></div> }
+else
+{
+
+
+@if (cars.Any())
+{
+<table class="table  table-striped table-bordered" style="text-align:center;">
+    <thead>
+        <tr>
+            <th>Numer Rejestracyjny</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Klient</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in cars)
+        {
+    <tr>
+        <td>@car.RegistrationNumber</td>
+        <td>@car.Brand</td>
+        <td>@car.Model</td>
+        <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
+        <td>
+            <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
+            <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
+            <button type="button" class="btn btn-success" @onclick="() => AssignClient(car)">Zmień właściciela</button>
+            <button type="button" class="btn btn-primary" @onclick="() => AddRequest(car)">Dodaj zgłoszenie</button>
+        </td>
+    </tr>
+    }
+    </tbody>
+</table> 
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Numer Rejestracyjny</th>
-                <th>Marka</th>
-                <th>Model</th>
-                <th>Klient</th>
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var car in cars)
-            {
-                <tr>
-                    <td>@car.RegistrationNumber</td>
-                    <td>@car.Brand</td>
-                    <td>@car.Model</td>
-                    <td>@(car.Client != null ? car.Client?.FirstName + " " + car.Client?.LastName : "brak")</td>
-                    <td>
-                        <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddCar(car)">Przypisz</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div style="padding-top: 25px">
+    <h2>Nie ma jeszcze żadnych samochodów</h2>
+</div>
+}
 }
 
-@code {
+@code { 
     private IEnumerable<Car> cars;
+    [CascadingParameter] public IModalService Modal { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,21 +64,40 @@ else
 
     }
 
-    void EditCar(Car car)
+    private void EditCar(Car car)
     {
         navigationManager.NavigateTo($"/editCar/{car.Id}");
     }
 
-    public async Task DeleteCar(Car car)
+    private async Task DeleteCar(Car car)
     {
-        //await carService.DeleteCar(car);
         navigationManager.NavigateTo("/cars", forceLoad: true);
     }
 
-    void AddCar(Car car)
+    private void AddCar(Car car)
     {
         navigationManager.NavigateTo($"/addCar/{car.Client.Id}");
     }
 
 
-}
+    protected async Task AssignClient(Car car)
+    {
+        var modal = Modal.Show<ClientsModal>("Wybierz nowego właściciela");
+        var result = await modal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            car.Client = (Client)result.Data;
+            carService.Update(car);
+            await carService.SaveChangesAsync();
+        }
+    }
+
+    private void AddRequest(Car car)
+    {
+        navigationManager.NavigateTo($"/AddRequest/{car.Id}");
+    } }

@@ -4,13 +4,13 @@ namespace Workshop.Enums
 {
     public enum Status
     {
-        [Display(Name = "Pending")]
+        [Display(Name = "Oczekujące")]
         Pending = 0,
-        [Display(Name = "In Progress")]
+        [Display(Name = "W trakcie")]
         InProgress = 1,
-        [Display(Name = "Finished")]
+        [Display(Name = "Zakończone")]
         Finished = 2,
-        [Display(Name = "Canceled")]
+        [Display(Name = "Anulowane")]
         Canceled = 3
     }
 }

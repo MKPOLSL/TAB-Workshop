@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,8 @@ using Workshop.DataAccess;
 using Workshop.Entities;
 using Workshop.Interfaces;
 using Workshop.Services.Base;
+using Workshop.Utils;
+
 
 namespace Workshop.Services
 {
@@ -13,44 +16,43 @@ namespace Workshop.Services
     {
         public ActivityService(CarContext context) : base(context) { }
 
-        public Task AddActivity()
+        public async Task<Activity> GetActivity(Guid id)
         {
-            throw new NotImplementedException();
+            return await Context
+                .Set<Activity>()
+                .GetAllNotHidden()
+                .Include(a => a.Worker)
+                .Include(a => a.ActivityType)
+                .Include(a => a.Request)
+                .ThenInclude(r => r.Car)
+                .Where(a => a.Id == id)
+                .FirstOrDefaultAsync();
         }
 
-        /*public Task AddActivity()
+        public Activity GetActivitySync(Guid id)
         {
-            var activities = new List<Activity>
-            {
-                new Activity{
-                Id = Guid.NewGuid(),
-                Description = "Działa",
-                Result = "Zrobione",
-                Status = 0,
-                Registered = DateTime.Now,
-                FinishedOrCancelled = DateTime.Now.AddDays(40),
-                ActivityType = new ActivityType {
-                ActivityName = "",
-                Code = "super",
-                IsHidden = false
-                }
-                ,
-                Request = new Request
-                {
-                    Description = "Request test 1",
-                    Activities = null,
-                    Car = context.Set<Car>().Where(c => c.Brand == "Audi").FirstOrDefault(),
-                    FinishedOrCancelled = DateTime.Now.AddDays(4),
-                    Id = Guid.NewGuid(),
-                    IsHidden = false,
-                    Manager = context.Set<Employee>().Where(e => e.Role == 0)
-                }
-
-            };
-            context.Set<Activity>().AddRange(activities);
-            await context.SaveChangesAsync();
-            throw new NotImplementedException();
+            return Context
+                .Set<Activity>()
+                .GetAllNotHidden()
+                .Include(a => a.Worker)
+                .Include(a => a.ActivityType)
+                .Include(a => a.Request)
+                .ThenInclude(r => r.Car)
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
         }
-        */
+
+        public async Task<IEnumerable<Activity>> GetWorkerActivities(Guid workerId)
+        {
+            return await Context
+                .Set<Activity>()
+                .GetAllNotHidden()
+                .Include(a => a.Worker)
+                .Include(a => a.ActivityType)
+                .Include(a => a.Request)
+                .ThenInclude(r => r.Car)
+                .Where(a => a.Worker.Id == workerId)
+                .ToListAsync();
+        }
     }
 }
