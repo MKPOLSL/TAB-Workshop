@@ -30,7 +30,6 @@ namespace Workshop.Services
         {
             return await Context
                   .Set<Car>()
-                  .GetAllNotHidden()
                   .Include(c => c.Client)
                   .ToListAsync();
         }
