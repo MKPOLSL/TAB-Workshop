@@ -52,8 +52,8 @@
     {
         await employeeService.CreateAsync(employee);
         await employeeService.SaveChangesAsync();
-        navigationManager.NavigateTo("/");
+        navigationManager.NavigateTo("/employees");
     }
 
-    void Cancel() => navigationManager.NavigateTo("/");
+    void Cancel() => navigationManager.NavigateTo("/employees");
 }

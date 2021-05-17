@@ -73,9 +73,6 @@ else
         employeeService.Delete(employee);
         await employeeService.SaveChangesAsync();
         navigationManager.NavigateTo("/employees", forceLoad: true);
-        //clientService.Delete(client);
-        //await clientService.SaveChangesAsync();
-        //navigationManager.NavigateTo("/clients", forceLoad: true);
     }
 
 }
