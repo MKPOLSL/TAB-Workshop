@@ -34,7 +34,9 @@ namespace Workshop.Services.Base
         {
             Context
                 .Set<T>()
-                .Remove(entity);
+                .Where(e => e == entity)
+                .FirstOrDefault()
+                .IsHidden = true;
         }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
