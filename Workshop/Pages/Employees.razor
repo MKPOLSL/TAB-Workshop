@@ -17,11 +17,10 @@ else
         <table class="table  table-striped table-bordered" style="text-align:center; margin-top: 16px;">
             <thead>
                 <tr>
-                    <th>Rola</th>
                     <th>Imię</th>
                     <th>Nazwisko</th>
                     <th>Nazwa użytkownika</th>
-                    <th>Hasło</th>
+                    <th>Rola</th>
                     <th>Akcje</th>
                 </tr>
             </thead>
@@ -29,19 +28,18 @@ else
 
                 @foreach (var employee in employees)
                 {
-                    <tr>
-                        <td>
-                            <span class="badge badge-@Badges.GetBadge(employee.Role)">@employee.Role</span>
-                        </td>
-                        <td>@employee.FirstName</td>
-                        <td>@employee.LastName</td>
-                        <td>@employee.Username</td>
-                        <td>@employee.Password</td>
-                        <td>
-                            <button type="button" class="btn btn-warning" @onclick="() => EditEmployee(employee)">Edytuj</button>
-                            <button type="button" class="btn btn-danger" @onclick="() => DeleteEmployee(employee)">Usuń</button>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.Username</td>
+                    <td>
+                        <span class="badge badge-@Badges.GetBadge(employee.Role)">@employee.Role.GetDisplayName()</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning" @onclick="() => EditEmployee(employee)">Edytuj</button>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteEmployee(employee)">Usuń</button>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
@@ -56,13 +54,15 @@ else
 }
 
 @code {
-
-    public Guid EmployeeId { get; set; }
-    private IEnumerable<Employee> employees;
+    private List<Employee> employees;
+    private Employee admin;
 
     protected override async Task OnInitializedAsync()
     {
-        employees = await employeeService.GetAllAsync();
+        admin = await employeeService.GetUserFromLocalStorage();
+        var temp = await employeeService.GetAllAsync();
+        employees = temp.ToList();
+        employees.Remove(admin);
     }
 
     void AddNewEmployee() => navigationManager.NavigateTo("/addEmployee");
