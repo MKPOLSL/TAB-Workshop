@@ -11,12 +11,12 @@
         <AuthorizeView>
             <Authorized>
                 <NavLink class="nav-link" href="login" @onclick="(() => Logout())">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Logout
+                    <span class="oi oi-plus" aria-hidden="true"></span> Wyloguj się
                 </NavLink>
             </Authorized>
             <NotAuthorized>
                 <NavLink class="nav-link" href="login">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Login
+                    <span class="oi oi-plus" aria-hidden="true"></span> Zaloguj się
                 </NavLink>
             </NotAuthorized>
         </AuthorizeView>
