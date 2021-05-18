@@ -1,85 +1,41 @@
-﻿@page "/addRequest/{CarId:guid}"
-@inject ICarService carService
+﻿@inject ICarService carService
 @inject IEmployeeService employeeService
-@inject IClientService clientService
 @inject IRequestService requestService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @attribute [AuthorizeRoles(Role.Manager)]
 
-<h1>
-    Rejestruj Zgłoszenie
-</h1>
-
-@if (managers == null)
-{
-    <div class="spinner"></div>
-}
-else
-{
-<div class="row">
-    <div class="col-md-4">
-        <form>
-            <div class="form-group">
-                <label for="Name" class="control-label">Opis Zgłoszenia</label>
-                <textarea @bind="request.Description" @bind:event="oninput" class="form-control" id="Description" rows="6" maxlength="300" style="resize:none"></textarea>
-                <label>Pozostało: @((300 - request.Description.Length)) znaków.</label>
-            </div>
-            <div class="form-group">
-                <label for="Name" class="control-label">Numer Rejestracyjny</label>
-                <input for="Name" class="form-control" readonly @bind-value="@chosenCar.RegistrationNumber" />
-            </div>
-            <div class="form-group">
-                <label for="Role" class="control-label">Menadżer odpowiedzialny</label>
-                <input for="Name" class="form-control" readonly value="@chosenManager.FirstName @chosenManager.LastName" />
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-primary" @onclick="() => CreateRequest(request)">Zapisz</button>
-                <button type="button" class="btn btn-danger" @onclick="() => Cancel()">Anuluj</button>
-            </div>
-        </form>
-    </div>
+<div style="width: 600px; height: 300px">
+    <form>
+        <div class="form-group">
+            <label for="Name" class="control-label">Opis Zgłoszenia</label>
+            <textarea @bind="request.Description" @bind:event="oninput" class="form-control" id="Description" rows="6" maxlength="300" style="resize:none"></textarea>
+            <label>Pozostało: @((300 - request.Description.Length)) znaków.</label>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" @onclick="() => CreateRequest(request)">Zapisz</button>
+        </div>
+    </form>
 </div>
-}
 
 @code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
     [Parameter]
-    public Guid CarId { get; set; }
+    public Car Car { get; set; }
+    [Parameter]
+    public Employee Manager { get; set; }
 
-    private Request request = new Request
+    private Request request = new Request() 
     {
-        Car = new Car(),
-        Manager = new Employee(),
-        Activities = new List<Activity>(),
         Description = ""
-
     };
-    private IEnumerable<Employee> managers;
-    private IEnumerable<Car> cars;
-    private Employee chosenManager = new Employee();
-    private Car chosenCar = new Car();
-
-    protected override async Task OnParametersSetAsync()
-    {
-        var user = await employeeService.GetUserFromLocalStorage();
-        chosenManager = await employeeService.GetById(user.Id);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        managers = await employeeService.GetAllManagers();
-        cars = await carService.GetAllCarsWithClients();
-        chosenCar = cars.Where(c => c.Id.Equals(CarId)).FirstOrDefault();
-    }
 
     protected async Task CreateRequest(Request request)
     {
         this.request.Reqistered = DateTime.Now;
-        this.request.Car = await carService.GetCarByRegistrationNumber(chosenCar.RegistrationNumber);
-        this.request.Manager = await employeeService.GetById(chosenManager.Id);
+        this.request.Car = Car;
+        this.request.Manager = Manager;
         await requestService.CreateAsync(request);
         await requestService.SaveChangesAsync();
-        navigationManager.NavigateTo("/requests");
+        await ModalInstance.CloseAsync(ModalResult.Ok(request));
     }
-
-    void Cancel() => navigationManager.NavigateTo("/clients");
 }

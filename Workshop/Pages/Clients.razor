@@ -4,24 +4,23 @@
 @attribute [AuthorizeRoles(Role.Manager)]
 
 <h1>Klienci</h1>
- 
+
 @if (clients == null)
 {
     <div class="spinner"></div>
 }
 else
 {
+    <button type="button" class="btn btn-primary" @onclick="() => AddNewClient()">Dodaj nowego klienta</button>
     @if (clients.Any())
     {
-        <table class="table  table-striped table-bordered" style="text-align:center; margin-top: 16px;" >
+        <table class="table  table-striped table-bordered" style="text-align:center; margin-top: 16px;">
             <thead>
                 <tr>
                     <th>Imię</th>
                     <th>Nazwisko</th>
                     <th>Numer telefonu</th>
-                    <th>
-                        <button type="button" class="btn btn-primary" @onclick="() => AddNewClient()">Dodaj nowego klienta</button>
-                    </th>
+                    <th>Akcje</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +33,7 @@ else
                         <td>
                             <button type="button" class="btn btn-warning" @onclick="() => EditClient(client)">Edytuj</button>
                             <button type="button" class="btn btn-danger" @onclick="() => DeleteClient(client)">Usuń</button>
-                            <button type="button" class="btn btn-primary" @onclick="() => AddCar(client.Id)">Przypisz samochód</button>
+                            <button type="button" class="btn btn-primary" @onclick="() => AddCar(client)">Przypisz samochód</button>
                         </td>
                     </tr>
                 }
@@ -72,9 +71,8 @@ else
         navigationManager.NavigateTo("/clients", forceLoad: true);
     }
 
-    void AddCar(Guid id)
+    void AddCar(Client client)
     {
-        ClientId = id;
-        navigationManager.NavigateTo($"/addCar/{ClientId}");
+        navigationManager.NavigateTo($"/addCar/{client.Id}");
     }
 }

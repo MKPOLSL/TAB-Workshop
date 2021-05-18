@@ -38,7 +38,7 @@ else
             <button type="button" class="btn btn-warning" @onclick="() => EditCar(car)">Edytuj</button>
             <button type="button" class="btn btn-danger" @onclick="() => DeleteCar(car)">Usuń</button>
             <button type="button" class="btn btn-success" @onclick="() => AssignClient(car)">Zmień właściciela</button>
-            <button type="button" class="btn btn-primary" @onclick="() => AddRequest(car)">Dodaj zgłoszenie</button>
+            <button type="button" class="btn btn-primary" @onclick="() => CreateRequest(car)">Dodaj zgłoszenie</button>
         </td>
     </tr>
     }
@@ -54,14 +54,14 @@ else
 }
 
 @code { 
-    private IEnumerable<Car> cars;
     [CascadingParameter] public IModalService Modal { get; set; }
+
+    private IEnumerable<Car> cars;
 
     protected override async Task OnInitializedAsync()
     {
         cars = await carService.GetAllCarsWithClients();
         await base.OnInitializedAsync();
-
     }
 
     private void EditCar(Car car)
@@ -71,6 +71,8 @@ else
 
     private async Task DeleteCar(Car car)
     {
+        carService.Delete(car);
+        await carService.SaveChangesAsync();
         navigationManager.NavigateTo("/cars", forceLoad: true);
     }
 
@@ -97,7 +99,19 @@ else
         }
     }
 
-    private void AddRequest(Car car)
+    private async Task CreateRequest(Car car)
     {
-        navigationManager.NavigateTo($"/AddRequest/{car.Id}");
-    } }
+        var manager = await employeeService.GetUserFromLocalStorage();
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(AddRequest.Car), car);
+        parameters.Add(nameof(AddRequest.Manager), manager);
+
+        var modal = Modal.Show<AddRequest>("Dodaj zgłoszenie", parameters);
+        var result = await modal.Result;
+
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+    }
+}
