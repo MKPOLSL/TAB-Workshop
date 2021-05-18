@@ -97,8 +97,7 @@ else
         else if(RequestId != Guid.Empty)
         {
             request = await requestService.GetRequest(RequestId);
-            activities = request.Activities;
-            activities = activities.OrderBy(a => a.SequenceNumber);  
+            activities = request.Activities.OrderBy(a => a.SequenceNumber);
         }
         await base.OnInitializedAsync();
     }

@@ -66,7 +66,7 @@ else
     {
         request = await requestService.GetRequest(RequestId);
         activityTypes = await activityTypeService.GetAllAsync();
-        activities = request.Activities.ToList();
+        activities = request.Activities.OrderBy(a => a.SequenceNumber).ToList();
 
         foreach (var activity in activities)
         {
