@@ -14,6 +14,10 @@
     <div class="spinner"></div> }
 else
 {
+    @if (employee.Role == Role.Manager)
+    {
+        <button type="button" class="btn btn-primary" style="margin-bottom: 8px" @onclick="() => AddActivities(request)">Dodaj aktywności</button>
+    }
     @if (activities.Any())
     {
         <table id="activityTable" class="table table-striped table-bordered" style="text-align:center;">
@@ -28,8 +32,9 @@ else
                     <th>Data rejestracji</th>
                     <th>Data zakończenia</th>
                     @if (employee.Role == Role.Manager)
-                    { 
-                        <th>Pracownik</th> 
+                    {
+                        <th>Pracownik</th>
+
                     }
                     <th>Akcje</th>
                 </tr>
@@ -37,32 +42,32 @@ else
             <tbody>
                 @foreach (var activity in activities)
                 {
-                <tr>
-                    <td>@activity.Request.Car.Brand @activity.Request.Car.Model</td>
-                    <td>@activity.Request.Car.RegistrationNumber</td>
-                    <td>@activity.ActivityType.ActivityName</td>
-                    <td>@activity.Description</td>
-                    <td>@(string.IsNullOrWhiteSpace(activity.Result) ? " - " : activity.Result)</td>
-                    <td><span class="badge badge-@Badges.GetBadge(activity.Status)">@activity.Status.GetDisplayName()</span></td>
-                    <td>@activity.Registered</td>
-                    <td>@(activity.FinishedOrCancelled == DateTime.MinValue ? " - " : activity.FinishedOrCancelled.ToString())</td>
-                    @if (employee.Role == Role.Manager) 
-                    { 
-                        <td>@(activity.Worker != null ? activity.Worker.FirstName + " " + activity.Worker.LastName + " (" + activity.Worker.Username + ")" : "Brak")</td>
-                    }
-                    <td style="min-width: 300px">
-                        @if (employee.Role == Role.Worker)
+                    <tr>
+                        <td>@activity.Request.Car.Brand @activity.Request.Car.Model</td>
+                        <td>@activity.Request.Car.RegistrationNumber</td>
+                        <td>@activity.ActivityType.ActivityName</td>
+                        <td>@activity.Description</td>
+                        <td>@(string.IsNullOrWhiteSpace(activity.Result) ? " - " : activity.Result)</td>
+                        <td><span class="badge badge-@Badges.GetBadge(activity.Status)">@activity.Status.GetDisplayName()</span></td>
+                        <td>@activity.Registered</td>
+                        <td>@(activity.FinishedOrCancelled == DateTime.MinValue ? " - " : activity.FinishedOrCancelled.ToString())</td>
+                        @if (employee.Role == Role.Manager)
                         {
-                            <button type="button" class="btn btn-success" @onclick="() => RestoreActivity(activity)">Realizuj</button>
+                            <td>@(activity.Worker != null ? activity.Worker.FirstName + " " + activity.Worker.LastName + " (" + activity.Worker.Username + ")" : "Brak")</td>
                         }
-                        else
-                        {
-                            <button type="button" class="btn btn-success" @onclick="() => AssignActivity(activity)">Przypisz</button>
-                        }
-                        <button type="button" class="btn btn-warning" @onclick="() => ShowModal(activity, true)">Zakończ</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => ShowModal(activity, false)">Anuluj</button>
-                    </td>
-                </tr>
+                        <td style="min-width: 300px">
+                            @if (employee.Role == Role.Worker)
+                            {
+                                <button type="button" class="btn btn-success" @onclick="() => RestoreActivity(activity)">Realizuj</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-success" @onclick="() => AssignActivity(activity)">Przypisz</button>
+                            }
+                            <button type="button" class="btn btn-warning" @onclick="() => ShowModal(activity, true)">Zakończ</button>
+                            <button type="button" class="btn btn-danger" @onclick="() => ShowModal(activity, false)">Anuluj</button>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -89,12 +94,12 @@ else
     protected override async Task OnInitializedAsync()
     {
         employee = await employeeService.GetUserFromLocalStorage();
-        if(employee.Role == Role.Worker)
+        if (employee.Role == Role.Worker)
         {
             activities = await activityService.GetWorkerActivities(employee.Id);
             activities = activities.OrderBy(a => a.Request).ThenBy(a => a.SequenceNumber);
         }
-        else if(RequestId != Guid.Empty)
+        else if (RequestId != Guid.Empty)
         {
             request = await requestService.GetRequest(RequestId);
             activities = request.Activities.OrderBy(a => a.SequenceNumber);
@@ -125,6 +130,9 @@ else
         else
         {
             activity.Worker = (Employee)result.Data;
+            activity.Result = "";
+            activity.FinishedOrCancelled = default;
+            activity.Status = Status.Pending;
             activityService.Update(activity);
             await activityService.SaveChangesAsync();
         }
@@ -148,4 +156,6 @@ else
             activity = (Activity)result.Data;
         }
     }
+
+    protected void AddActivities(Request request) => navigationManager.NavigateTo($"/addActivities/{request.Id}");
 }

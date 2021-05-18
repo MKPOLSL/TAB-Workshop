@@ -82,7 +82,7 @@ else
         }
     }
 
-    private async Task DeleteActivity(Activity activity)
+    private void DeleteActivity(Activity activity)
     {
         if (request.Activities.Contains(activity))
         {
@@ -132,7 +132,7 @@ else
             }
         }
         await activityService.SaveChangesAsync();
-        navigationManager.NavigateTo($"/requests");
+        navigationManager.NavigateTo($"/activities/{request.Id}");
     }
 
     private void MoveUp(Activity activity)

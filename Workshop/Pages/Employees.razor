@@ -31,7 +31,7 @@ else
                 {
                     <tr>
                         <td>
-                            <span class="badge badge-@GetBadge(employee.Role)">@employee.Role</span>
+                            <span class="badge badge-@Badges.GetBadge(employee.Role)">@employee.Role</span>
                         </td>
                         <td>@employee.FirstName</td>
                         <td>@employee.LastName</td>
@@ -78,12 +78,4 @@ else
         await employeeService.SaveChangesAsync();
         navigationManager.NavigateTo("/employees", forceLoad: true);
     }
-
-    private string GetBadge(Role role) => role switch
-    {
-        Role.Administrator => "secondary",
-        Role.Manager => "warning",
-        Role.Worker => "success",
-        _ => "dark"
-    };
 }

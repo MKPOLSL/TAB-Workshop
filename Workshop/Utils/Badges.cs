@@ -16,5 +16,13 @@ namespace Workshop.Utils
             Status.Canceled => "danger",
             _ => "dark"
         };
+
+        public static string GetBadge(Role role) => role switch
+        {
+            Role.Administrator => "secondary",
+            Role.Manager => "warning",
+            Role.Worker => "success",
+            _ => "dark"
+        };
     }
 }
