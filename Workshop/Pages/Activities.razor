@@ -97,7 +97,7 @@ else
         if (employee.Role == Role.Worker)
         {
             activities = await activityService.GetWorkerActivities(employee.Id);
-            activities = activities.OrderBy(a => a.Request).ThenBy(a => a.SequenceNumber);
+            activities = activities.OrderBy(a => a.Request);
         }
         else if (RequestId != Guid.Empty)
         {
